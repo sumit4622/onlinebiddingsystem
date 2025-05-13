@@ -1,39 +1,20 @@
-name: ci
-
+name: CI workflow
 on:
-  push:
-    branches:
-      - main
-      - dev
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-    branches:
-      - main
-      - dev
+  push
 
 jobs:
-  build-and-deploy:
-    name: ci
+  run-linter-and-tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: npm install
+      - name: npm install
+        run: npm i
 
-      - name: Build React App
-        run: npm run build
+      - name: Lint code
+        run: npm run lint
 
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          user_name: sumit4622
-          user_email: sumitraay2022@gmail.com
+      - name: Run tests
+        run: npm test
