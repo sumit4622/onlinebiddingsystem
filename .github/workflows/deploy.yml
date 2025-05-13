@@ -33,5 +33,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          user-name: sumit4622
+          user_name: sumit4622
           user_email: sumitraay2022@gmail.com
+
