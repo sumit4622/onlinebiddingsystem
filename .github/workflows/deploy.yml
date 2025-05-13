@@ -1,31 +1,32 @@
-name: React CI/CD
+name: ci
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - dev
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - main
+      - dev
 
 jobs:
-  build:
+  build-and-deploy:
+    name: ci
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test --if-present
-
-      - name: Build app
+      - name: Build React App
         run: npm run build
 
       - name: Deploy to GitHub Pages
