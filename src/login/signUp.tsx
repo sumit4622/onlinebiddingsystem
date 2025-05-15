@@ -22,7 +22,7 @@ export function Form() {
                     <label htmlFor="password" className="form-label">Password</label>
                     <input
                         type="password"
-                        className="form-control"
+                        classNa me="form-control"
                         id="password"
                         required
                     />
