@@ -1,7 +1,4 @@
-import logo from './logo.svg';
-import './App.css';
-import {Form} from './login/signUp.tsx'
-import { Header } from './landingPage/Components/header.tsx';    
+import './App.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // or bootstrap.min.js
 
