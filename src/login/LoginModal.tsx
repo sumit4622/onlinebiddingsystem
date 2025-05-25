@@ -1,6 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+import api from "../api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 
 export function LoginModal() {
+  const [username, setusername] = useState("");       // email for login
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Sending email and password to the backend
+      const response = await api.post("/api/token/", {
+        email: username,
+        password: password,
+      });
+
+      localStorage.setItem(ACCESS_TOKEN, response.data.access);
+      localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
+
+      alert("Login successful!");
+      setError(null);
+      window.location.reload();
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Invalid email or password.");
+    }
+  };
+
   return (
     <div
       className="modal fade"
@@ -11,26 +40,27 @@ export function LoginModal() {
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title" id="LoginModalLabel">Log-in</h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <form>
+          <form onSubmit={handleSubmit}>
+            <div className="modal-header">
+              <h5 className="modal-title" id="LoginModalLabel">Log-in</h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">Email address</label>
                 <input
                   type="email"
                   className="form-control"
                   id="email"
+                  value={username}
+                  onChange={(e) => setusername(e.target.value)}
                   required
                 />
-                <div className="form-text">We'll never share your email with anyone else.</div>
               </div>
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">Password</label>
@@ -38,6 +68,8 @@ export function LoginModal() {
                   type="password"
                   className="form-control"
                   id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
@@ -46,23 +78,26 @@ export function LoginModal() {
                   type="checkbox"
                   className="form-check-input"
                   id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <label className="form-check-label" htmlFor="rememberMe">
                   Remember me
                 </label>
               </div>
-            </form>
-          </div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="submit" className="btn btn-primary">Log-in</button>
-          </div>
+              {error && <div className="alert alert-danger">{error}</div>}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" className="btn btn-primary">Log-in</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
