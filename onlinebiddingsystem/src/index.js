@@ -1,21 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+// import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // or bootstrap.min.jss
 
-import { Header } from './landingPage/Components/header.tsx';
+import  Home  from './landingPage/Home.tsx';
+import Auction from './landingPage/Auction.tsx';
 
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Header />
-    <App />
-    
+    <Home />
+    <Auction />
   </React.StrictMode>
 );
 
