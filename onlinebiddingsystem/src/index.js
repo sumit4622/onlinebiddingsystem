@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // or bootstrap.min.jss
 
 import  Home  from './landingPage/Home.tsx';
+import Auction from './landingPage/Auction.tsx';
 
 
 
@@ -14,7 +15,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Home />
-    
+    <Auction />
   </React.StrictMode>
 );
 
