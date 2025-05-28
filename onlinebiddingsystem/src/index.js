@@ -8,6 +8,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // or bootstrap.min.jss
 
 import  Home  from './landingPage/Home.tsx';
 import Auction from './landingPage/Auction.tsx';
+import Step from './landingPage/Step.jsx';
+import Contact from './landingPage/Contact.tsx';
 
 
 
@@ -16,6 +18,8 @@ root.render(
   <React.StrictMode>
     <Home />
     <Auction />
+    <Step />
+    <Contact />
   </React.StrictMode>
 );
 
