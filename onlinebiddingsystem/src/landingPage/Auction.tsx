@@ -9,13 +9,13 @@ import { Pagination, Navigation } from 'swiper/modules';
 export default function AuctionSwiper() {
   const [isMobile, setIsMobile] = useState(false);
 
-  // Update state on screen resize
+  
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    handleResize(); // Initial check
+    handleResize(); 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -59,7 +59,7 @@ export default function AuctionSwiper() {
               </div>
             </div>
           ) : (
-            // Original Large Screen Design
+            
             <div className="h-50">
               <div className="auction-card">
                 <div className="card-image">💰</div>
@@ -73,7 +73,6 @@ export default function AuctionSwiper() {
           )}
         </SwiperSlide>
 
-        {/* Repeat same logic for other slides */}
         <SwiperSlide>
           {isMobile ? (
             <div className="card text-center p-3">
@@ -98,7 +97,7 @@ export default function AuctionSwiper() {
           )}
         </SwiperSlide>
 
-        {/* Slide 3 */}
+       
         <SwiperSlide>
           {isMobile ? (
             <div className="card text-center p-3">
