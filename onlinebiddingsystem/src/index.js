@@ -6,12 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // or bootstrap.min.jss
 
-import  Home  from './landingPage/Home.tsx';
-import Auction from './landingPage/Auction.tsx';
-import Step from './landingPage/Step.jsx';
-import Contact from './landingPage/Contact.tsx';
-import Works from './landingPage/Works.tsx';
-
+import  Home  from './pages/landing/Home.jsx';
+import Auction from './pages/landing/Auction.jsx';
+import Step from './pages/landing/Step.jsx';
+import Contact from './pages/landing/Contact.jsx';
+import Works from './pages/landing/Works.jsx';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

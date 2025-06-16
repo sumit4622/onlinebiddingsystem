@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import api from "../api";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import api from "../../api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 
-export function LoginModal() {
+export default function LoginModal() {
   const [username, setusername] = useState("");       // email for login
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);

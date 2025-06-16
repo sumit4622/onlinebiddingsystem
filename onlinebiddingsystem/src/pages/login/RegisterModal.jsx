@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import api from '../api'; // Make sure this path is correct
+import api from '../../api'; 
 
-export function RegisterModal() {
+export default function RegisterModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setusername] = useState("");
@@ -153,3 +153,4 @@ export function RegisterModal() {
     </div>
   );
 }
+

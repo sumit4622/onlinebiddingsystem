@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Landing/Works.css'; 
+import '../../styles/Landing/Works.css'; 
 
 export default function Works() {
   return (
