@@ -1,12 +1,23 @@
-from django.shortcuts import render
-from django.contrib.auth.models import User
-from rest_framework import generics
-from .serializers import UserSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.response import Response
+from .models import userRegister
+from .serializers import userRegisterSerializers
 
 
-# Create your views here.
-class CreateUserView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+@api_view(['POST'])
+def userRegistration(request):
+    if request.method == 'POST':
+        user = userRegisterSerializers(data=request.data)
+        if user.is_valid():
+            user.save()
+            return Response(user.data, status=status.HTTP_201_CREATED)
+        return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['POST'])
+def loginUser(request):
+    if request.method == 'POST':
+        
+        pass
+    return Response(user.errors, status=status.user_not_valid)
