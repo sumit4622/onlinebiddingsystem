@@ -1,9 +1,9 @@
 import React from 'react';
-import '../styles/Landing/Works.css'; 
+import '../../styles/Landing/Works.css'; 
 
 export default function Works() {
   return (
-    <div>
+    <div id ="join">
       <section className="py-5" id="about">
         <div className="container">
           <h2 className="text-center mb-5">How It Works</h2>

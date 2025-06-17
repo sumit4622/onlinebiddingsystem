@@ -3,10 +3,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import '../styles/Landing/acution.css';
+import '../../styles/Landing/acution.css';
 import { Pagination, Navigation } from 'swiper/modules';
 
-export default function AuctionSwiper() {
+export default function Auction() {
   const [isMobile, setIsMobile] = useState(false);
 
   
@@ -22,7 +22,7 @@ export default function AuctionSwiper() {
 
   return (
     
-    <div className="container py-5">
+    <div className="container py-5" id='Auction'>
         <h1 className=" text-center" style={{ zIndex:10 ,color:"black"}}>
   Featured Auctions
 </h1>

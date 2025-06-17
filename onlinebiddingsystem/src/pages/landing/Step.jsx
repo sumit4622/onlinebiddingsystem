@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Step() {
   return (
-    <div>
+    <div >
       <section className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
         <div className="container">
           <h2 className="text-center text-dark mb-5">Why Choose Us?</h2>

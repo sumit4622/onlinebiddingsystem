@@ -1,6 +1,6 @@
 import React from 'react'
-import {Header} from './Components/header.tsx'
-import '../styles/Landing/Home.css';
+import  Header  from '../../landingPage/Components/Header'
+import '../../styles/Landing/Home.css';
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
       <>
       <Header />
       </>
-      <div className=" gradient text-center p-3">
+      <div className=" gradient text-center p-3 " id='Home'>
         <header className="text-white p-5">
             <h1 className="display-1 pw-bold p-3 ">Bid Smart. Win Big.</h1>
             <p className="lead fs-4 mb-4">Join our secure and transparent online bidding platform</p>

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import api from "../api";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { useNavigate } from 'react-router-dom';
+import api from "../../api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 
-export function LoginModal() {
-  const [username, setusername] = useState("");       // email for login
+export default function LoginModal() {
+  const [username, setusername] = useState("");       
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
+
+  const navigate =useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,10 +23,12 @@ export function LoginModal() {
 
       localStorage.setItem(ACCESS_TOKEN, response.data.access);
       localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
-
+      
       alert("Login successful!");
+
       setError(null);
-      window.location.reload();
+      // window.location.reload();
+      navigate('/dashboard')
     } catch (err) {
       console.error("Login error:", err);
       setError("Invalid email or password.");
@@ -68,6 +73,7 @@ export function LoginModal() {
                 <input
                   type="password"
                   className="form-control"
+                  placeholder='Password'
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

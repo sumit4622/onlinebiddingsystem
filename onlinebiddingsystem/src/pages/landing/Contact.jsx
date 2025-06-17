@@ -1,15 +1,15 @@
 import React from 'react'
-import '../styles/Landing/Contact.css'; 
+import '../../styles/Landing/Contact.css'; 
 
 export default function Contact() {
   return (
-    <div>
+    <div id='Contact'>
       <section className="py-5" style={{ background: 'linear-gradient(135deg, #2c3e50, #34495e)', color: 'white' }}>
         <div className="container">
           <div className="row align-items-center g-5">
             <div className="col-md-6">
-              <h2>Contact Us</h2>
-              <p>Have questions? We're here to help you succeed in your bidding journey.</p>
+              <h2 className=' fs-1'>Contact Us</h2>
+              <p className=' fs-6'>Have questions? We're here to help you succeed in your bidding journey.</p>
             </div>
             <div className="col-md-6">
               <form
