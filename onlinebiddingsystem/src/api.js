@@ -8,12 +8,20 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem(ACCESS_TOKEN);
-  if (token) {
+
+  const PUBLIC_ENDPOINTS = ['api/user/register/', '/login', '/forgot-password', '/api/token/'];
+
+  const isPublic = PUBLIC_ENDPOINTS.some((url) =>
+    config.url.startsWith(url)
+  );
+
+  if (token && !isPublic) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
-},(error) => {
-  return Promise.reject(error)
+}, (error) => {
+  return Promise.reject(error);
 });
 
 

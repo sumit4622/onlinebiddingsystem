@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
-from .models import userRegister
+from django.contrib.auth.models import User
 from .serializers import userRegisterSerializers
 
 
@@ -15,9 +15,3 @@ def userRegistration(request):
         return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-@api_view(['POST'])
-def loginUser(request):
-    if request.method == 'POST':
-        
-        pass
-    return Response(user.errors, status=status.user_not_valid)

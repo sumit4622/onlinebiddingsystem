@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import api from '../../api'; 
+import api from '../../api';
 
 export default function RegisterModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setusername] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("Kathmandu");
-  const [zip, setZip] = useState("");
+  const [first_name, setfirst_name] = useState("");
+  const [last_name, setlast_name] = useState("");
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,10 +16,8 @@ export default function RegisterModal() {
       username,
       email,
       password,
-      address,
-      city,
-      state,
-      zip,
+      first_name,
+      last_name,
     };
 
     try {
@@ -86,55 +83,28 @@ export default function RegisterModal() {
                     required
                   />
                 </div>
+                <div className="form-group col-md-3">
+                  <label htmlFor="firstname">First Name</label>
+                  <input type="text"
+                    className='form-control'
+                    id='inputFirstName'
+                    placeholder='First Name'
+                    value={first_name}
+                    onChange={(e) => setfirst_name(e.target.value)} />
+                </div>
+                <div className="form-group col-md-3">
+                  <label htmlFor="firstname">Last Name</label>
+                  <input type="text"
+                    className='form-control'
+                    id='inputLasttName'
+                    placeholder='Last Name'
+                    value={last_name}
+                    onChange={(e) => setlast_name(e.target.value)} />
+                </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="inputAddress">Address</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputAddress"
-                  placeholder="1234 Main St"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  required
-                />
-              </div>
+
               <div className="row">
-                <div className="form-group col-md-6">
-                  <label htmlFor="inputCity">City</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputCity"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group col-md-4">
-                  <label htmlFor="inputState">State</label>
-                  <select
-                    id="inputState"
-                    className="form-control"
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
-                    required
-                  >
-                    <option>Kathmandu</option>
-                    <option>Pokhara</option>
-                  </select>
-                </div>
-                <div className="form-group col-md-2 pb-4">
-                  <label htmlFor="inputZip">Zip</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputZip"
-                    value={zip}
-                    onChange={(e) => setZip(e.target.value)}
-                    required
-                  />
-                </div>
+
               </div>
             </div>
             <div className="modal-footer">

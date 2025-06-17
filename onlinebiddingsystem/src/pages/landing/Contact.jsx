@@ -3,7 +3,7 @@ import '../../styles/Landing/Contact.css';
 
 export default function Contact() {
   return (
-    <div>
+    <div id='Contact'>
       <section className="py-5" style={{ background: 'linear-gradient(135deg, #2c3e50, #34495e)', color: 'white' }}>
         <div className="container">
           <div className="row align-items-center g-5">

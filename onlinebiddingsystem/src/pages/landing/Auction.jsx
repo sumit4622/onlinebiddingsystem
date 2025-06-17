@@ -22,7 +22,7 @@ export default function Auction() {
 
   return (
     
-    <div className="container py-5">
+    <div className="container py-5" id='Auction'>
         <h1 className=" text-center" style={{ zIndex:10 ,color:"black"}}>
   Featured Auctions
 </h1>

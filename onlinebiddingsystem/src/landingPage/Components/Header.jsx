@@ -1,14 +1,21 @@
 import  RegisterModal  from "../../pages/login/RegisterModal.jsx";
 import  LoginModal  from "../../pages/login/LoginModal.jsx";
+import Auction from "../../pages/landing/Auction.jsx"
+import Home from "../../pages/landing/Home.jsx"
+import Step from "../../pages/landing/Step.jsx"
+import Contact from "../../pages/landing/Contact.jsx"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
+
 export default function Header() {
+ 
+
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="Home">Online Bidding</a>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a className="navbar-brand" href="#Home">Online Bidding</a>
         <button
           className="navbar-toggler"
           type="button"
@@ -23,13 +30,13 @@ export default function Header() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item active">
+            <li className="nav-item active" >
               <a className="nav-link" href="current">
-                Home <span className="visually-hidden">(current)</span>
+                Home <span className="visually-hidden"></span>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="Abountus">About us</a>
+              <a className="nav-link" href="#Auction" >Auction</a>
             </li>
             <li className="nav-item dropdown">
               <a
@@ -43,10 +50,16 @@ export default function Header() {
                 Dropdown
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a className="dropdown-item" href="lulu">Action</a></li>
+                {/* <li><a className="dropdown-item" href="lulu">Action</a></li>
                 <li><a className="dropdown-item" href="lulu">Another action</a></li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="something">Something else here</a></li>
+                <li><a className="dropdown-item" href="something">Something else here</a></li> */}
+                <li className="nav-item">
+              <a className="nav-link" href="#Contact" > Contact Us</a>
+            </li>
+            <li className="nav-item" >
+              <a className="nav-link" href="#join">Join Us</a>
+            </li>
               </ul>
             </li>
           </ul>
