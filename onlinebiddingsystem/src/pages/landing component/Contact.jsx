@@ -1,4 +1,4 @@
-import React from 'react'
+
 import '../../styles/Landing/Contact.css'; 
 
 export default function Contact() {

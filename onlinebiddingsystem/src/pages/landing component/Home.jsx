@@ -1,5 +1,5 @@
-import React from 'react'
-import  Header  from '../../landingPage/Components/Header'
+
+import  Header  from '../landing component/Header'
 import '../../styles/Landing/Home.css';
 
 export default function Home() {
