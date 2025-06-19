@@ -4,14 +4,14 @@ import api from '../../api'
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../../constants"
 import { useState, useEffect } from "react"
 
-function protectedRoute({children}){
+function ProtectedRoute({children}){
 
     const [isAuthorized, setIsAuthorized] = useState(null)
 
 
     useEffect(() => {
         auth().catch(()=> setIsAuthorized(false))
-    })
+    }, []);
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN)
         try {
@@ -35,7 +35,7 @@ function protectedRoute({children}){
             setIsAuthorized(false)
             return
         }
-        const decoded = jwtDecode
+        const decoded = jwtDecode(token);
         const tokenExpiration = decoded.exp
         const nowDate = Date.now() / 1000
 
@@ -50,7 +50,7 @@ function protectedRoute({children}){
         return <div>Loading...</div>;
     }
 
-    return isAuthorized ? children : <Navigate to ="/login"/>
+    return isAuthorized ? children : <Navigate to ="/"/>
 }
 
-export default protectedRoute
+export default ProtectedRoute
