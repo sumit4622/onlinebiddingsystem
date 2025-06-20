@@ -2,7 +2,6 @@ import React from "react";
 import {
   Route,
   BrowserRouter,
-  createRoutesFromElements,
   Navigate,
   Routes,
 } from "react-router-dom";

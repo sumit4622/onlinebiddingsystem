@@ -28,7 +28,7 @@ export default function LoginModal({ show, handleClose, setIsLoggedIn }) {
       setIsLoggedIn(true);
       alert("Login successful!");
 
-      handleClose();  // Close the modal
+      handleClose();  
       navigate('/dashboard', { replace: true });
 
     } catch (err) {
@@ -38,7 +38,7 @@ export default function LoginModal({ show, handleClose, setIsLoggedIn }) {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={handleClose} centered size='lg'>
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>Log In</Modal.Title>
