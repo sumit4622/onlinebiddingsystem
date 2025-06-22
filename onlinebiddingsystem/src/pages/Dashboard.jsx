@@ -1,4 +1,3 @@
-import React, { Component } from 'react'
 import Header from './landing component/Header';
 import LogoutModal from "./login/LogoutModal"
 

@@ -1,11 +1,9 @@
-import React from 'react';
-import { Home, ArrowLeft } from 'lucide-react';
 
 const NotFoundPage = () => {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-6">
       <div className="text-center max-w-2xl mx-auto">
-        
+
         {/* 404 Number */}
         <h1 className="text-8xl md:text-9xl font-black text-gray-900 mb-8">
           404
@@ -25,20 +23,14 @@ const NotFoundPage = () => {
         </div>
 
         {/* Action buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a
-            href="/"
-            className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200"
-          >
-            <Home className="w-5 h-5 mr-2" />
-            Back to Home
-          </a>
-          
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center px-8 py-4 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200"
+            class="btn btn-light d-inline-flex align-items-center px-4 py-3 text-dark"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
+            <svg class="me-2" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+            </svg>
             Go Back
           </button>
         </div>
