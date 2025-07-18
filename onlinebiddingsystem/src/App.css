@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+
+@media (max-width: 576px) {
+  .floating-button {
+    right: 10px !important;
+    bottom: 10px !important;
+  }
+}
