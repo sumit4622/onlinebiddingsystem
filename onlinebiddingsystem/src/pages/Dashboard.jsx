@@ -89,7 +89,7 @@ export default function Dashboard() {
             <div key={index} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4">
               <div className="card h-100">
                 <div className="card-body">
-                  <img src={SanImage} alt="picture" style={{ width: '100%', height: 'auto' }} />
+                  <imgage src={SanImage} alt="picture" style={{ width: '100%', height: 'auto' }} />
                   <h5 className="card-title">{item.Tittle}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">{item.secondTittle}</h6>
                   <p>This is a smart watch which is great for young people.</p>

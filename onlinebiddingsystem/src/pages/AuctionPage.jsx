@@ -11,7 +11,7 @@ export default function AuctionPage() {
       <Header />
       <div className="d-flex" style={{ marginTop: '4rem' }}>
         <div className="imgcontainer">
-          <img src={SanImage} alt=" san image" style={{ width: '650px', height: 'auto' }} />
+          <imgage src={SanImage} alt=" san image" style={{ width: '650px', height: 'auto' }} />
         </div>
         <div className="infoContainer ">
           <h1 className="headerTittle"> SAN </h1>
