@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import RegisterModal from "../../pages/login/RegisterModal.jsx";
 import LoginModal from "../../pages/login/LoginModal.jsx";
 import LogoutModal from "../login/LogoutModal.jsx";
 import { ACCESS_TOKEN } from "../../constants.js";
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar  } from "antd"
+import '../../App.css'
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigate = () =>{
+    navigate('/UserProfile')
+  }
 
   useEffect(() => {
     const token = localStorage.getItem(ACCESS_TOKEN);
@@ -47,7 +56,7 @@ export default function Header() {
             </li>
           </ul>
 
-          <form className="d-flex gap-2">
+          <form className="d-flex gap-3 px-3">
             <input className="form-control me-2" type="search" placeholder="Search" />
             <button className="btn btn-outline-primary" type="submit">Search</button>
 
@@ -61,9 +70,8 @@ export default function Header() {
                   Logout
                 </button>
 
-                <div className="profile">
-                  
-
+                <div className="profile ">
+                  <Avatar onClick={handleNavigate}style={{ backgroundColor: '#87d068' }} size={"large"} icon={<UserOutlined />} />                
                 </div>
               </>
             ) : (
