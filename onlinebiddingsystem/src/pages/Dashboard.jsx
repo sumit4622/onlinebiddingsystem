@@ -83,21 +83,21 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className='container'>
-        <div className="row">
+      <div className='container' >
+        <div className="row" >
           {Action.map((item, index) => (
-            <div key={index} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4">
+            <div key={index} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4" >
               <div className="card h-100">
-                <div className="card-body">
-                  <imgage src={SanImage} alt="picture" style={{ width: '100%', height: 'auto' }} />
+                <div className="card-body" style={{width: "18rem;"}}>
+                  <img src={SanImage} alt="CardImage" style={{ width: '100%', height: 'auto' }} />
                   <h5 className="card-title">{item.Tittle}</h5>
-                  <h6 className="card-subtitle mb-2 text-muted">{item.secondTittle}</h6>
-                  <p>This is a smart watch which is great for young people.</p>
+                  <h6 className="card-subtitle mb-2 text-muted ">{item.secondTittle}</h6>
+                  <p className='text-justify'>This is a smart watch which is great for young people.</p>
                   <hr />
-                  <div className="d-flex justify-content-between align-items-center">
-                    <p className='fw-bold mb-0'>Rs: 4000</p>
-                    <div className="Duration rounded-pill pt-2 pb-2 px-3 text-white" style={{ backgroundColor: '#3C3C43' }}>
-                      <p className='mb-0'>2d 7hr 40min</p>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <p className='fw-bold mb-0 col-sm-5'>Rs: 4000</p>
+                    <div className="Duration rounded-pill pt-2 pb-2 px-lg-3 px-sm-2 text-white flex-shrink-0" style={{ backgroundColor: '#3C3C43' }}>
+                      <p className='mb-0 text-nowrap'>2d 7hr 40min</p>
                     </div>
                   </div>
                   <hr />

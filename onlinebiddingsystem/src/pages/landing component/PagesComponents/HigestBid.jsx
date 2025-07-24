@@ -5,7 +5,7 @@ export default function HigestBid() {
         <div>
             <div className="container mt-3" >
                 <div className="Tittle">
-                    <h6 className="title">
+                    <h6 className="title fw-bold">
                         Bids
                     </h6>
                 </div>
