@@ -44,3 +44,15 @@
     bottom: 10px !important;
   }
 }
+
+
+.profile .ant-avatar {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+  cursor: pointer; 
+}
+
+.profile .ant-avatar:hover {
+  background-color: #6cb24f !important; /* A darker shade of your initial green */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transform: scale(1.05);
+}
