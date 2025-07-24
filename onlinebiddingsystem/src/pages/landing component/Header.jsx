@@ -52,13 +52,20 @@ export default function Header() {
             <button className="btn btn-outline-primary" type="submit">Search</button>
 
             {isLoggedIn ? (
-              <button
-                className="btn btn-outline-danger"
-                type="button"
-                onClick={() => setShowLogoutModal(true)}
-              >
-                Logout
-              </button>
+              <>
+                <button
+                  className="btn btn-outline-danger"
+                  type="button"
+                  onClick={() => setShowLogoutModal(true)}
+                >
+                  Logout
+                </button>
+
+                <div className="profile">
+                  
+
+                </div>
+              </>
             ) : (
               <>
                 <button
