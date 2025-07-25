@@ -11,21 +11,21 @@ export default function AccountSetting() {
           <div className="info-row">
             <div className="info-item">
               <span className="info-label">First name:</span>
-              <span className="info-value">John</span>
+              <span className="info-value">Sumit</span>
             </div>
           </div>
           
           <div className="info-row">
             <div className="info-item">
               <span className="info-label">Last name:</span>
-              <span className="info-value">Appleseed</span>
+              <span className="info-value">Ray</span>
             </div>
           </div>
           
           <div className="info-row">
             <div className="info-item">
               <span className="info-label">Email:</span>
-              <span className="info-value">john.appleseed@gmail.com</span>
+              <span className="info-value">Sumit.ray@gmail.com</span>
             </div>
           </div>
           
