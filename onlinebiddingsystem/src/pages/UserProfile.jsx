@@ -46,7 +46,7 @@ export default function UserProfile() {
               {/* Divider */}
               <hr style={{ margin: '1.5rem 0', borderColor: '#dee2e6' }} />
 
-              {/* Navigation Menu - Enhanced */}
+              
               <nav className="nav flex-column">
                 <NavLink 
                   to="bidding" 
