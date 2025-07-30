@@ -1,21 +1,25 @@
-import "../../../styles/Landing/Userprofile/Upload.css"
+import "../../../styles/Landing/Userprofile/Upload.css";
 import { useState } from "react";
+import { ACCESS_TOKEN } from "../../../constants";
 import api from "../../../api";
 
 export default function UploadItems() {
+    const token = localStorage.getItem(ACCESS_TOKEN); // or just "accessToken" if that's how you saved it
+
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        startDate: '',
-        endDate: '',
-        minimumBid: ''
+        start_date: '',
+        end_date: '',
+        minimum_bid: ''
     });
 
-    const [uploadedImage, setUploadedImage] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [uploadedImagePreview, setUploadedImagePreview] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
             [name]: value
         }));
@@ -24,50 +28,50 @@ export default function UploadItems() {
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setUploadedImage(e.target.result);
-            };
-            reader.readAsDataURL(file);
+            setImageFile(file);
+            setUploadedImagePreview(URL.createObjectURL(file));
         }
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
 
         const dataToSend = new FormData();
-        dataToSend.append('tittle', formData.title);
-        dataToSend.append('description', formData.description);
-        dataToSend.append('start_date', formData.startDate);
-        dataToSend.append('end_date', formData.endDate);
-        dataToSend.append('minium_date', formData.minimumBid);
+        dataToSend.append("title", formData.title);
+        dataToSend.append("description", formData.description);
+        dataToSend.append("start_date", formData.start_date);
+        dataToSend.append("end_date", formData.end_date);
+        dataToSend.append("minimum_bid", formData.minimum_bid);
+        if (imageFile) {
+            dataToSend.append("image", imageFile);
+        }
 
-
-        e.preventDefault();
         try {
             const response = await api.post("/api/items/upload/", dataToSend, {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                }
-            })
-            if (response === 201) {
-                console.log("upload successful", response.data)
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 201 || response.status === 200) {
+                console.log("Upload successful", response.data);
+                alert("Item uploaded successfully!");
             }
         } catch (error) {
-            alert(error?.response)
+            console.error("Upload failed:", error.response?.data || error.message);
+            alert("Upload failed. Check console for details.");
         }
     };
 
     return (
         <div className="upload-container">
-
-            {/* Upload Form */}
             <div className="upload-form">
-                {/* Main Photo Section */}
                 <div className="photo-section">
                     <label className="photo-label">Main Photo</label>
                     <div className="photo-upload-area">
-                        {uploadedImage ? (
-                            <img src={uploadedImage} alt="Uploaded" className="uploaded-image" />
+                        {uploadedImagePreview ? (
+                            <img src={uploadedImagePreview} alt="Preview" className="uploaded-image" />
                         ) : (
                             <div className="photo-placeholder">
                                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5">
@@ -89,9 +93,7 @@ export default function UploadItems() {
                     </div>
                 </div>
 
-                {/* Form Fields */}
                 <div className="form-fields">
-                    {/* Title Field */}
                     <div className="form-group">
                         <input
                             type="text"
@@ -103,7 +105,6 @@ export default function UploadItems() {
                         />
                     </div>
 
-                    {/* Description Field */}
                     <div className="form-group">
                         <textarea
                             name="description"
@@ -115,41 +116,37 @@ export default function UploadItems() {
                         />
                     </div>
 
-                    {/* Date and Bid Fields Row */}
                     <div className="form-row">
                         <div className="form-group flex-1">
                             <input
                                 type="date"
-                                name="startDate"
-                                value={formData.startDate}
+                                name="start_date"
+                                value={formData.start_date}
                                 onChange={handleInputChange}
-                                placeholder="Start Bid Date m/d/y"
                                 className="form-input"
                             />
                         </div>
                         <div className="form-group flex-1">
                             <input
                                 type="date"
-                                name="endDate"
-                                value={formData.endDate}
+                                name="end_date"
+                                value={formData.end_date}
                                 onChange={handleInputChange}
-                                placeholder="End Bid Date m/d/y"
                                 className="form-input"
                             />
                         </div>
                         <div className="form-group flex-1">
                             <input
                                 type="text"
-                                name="minimumBid"
-                                value={formData.minimumBid}
+                                name="minimum_bid"
+                                value={formData.minimum_bid}
                                 onChange={handleInputChange}
-                                placeholder="minimum Bid amount Rs 400"
+                                placeholder="Minimum Bid Amount (e.g. Rs 400)"
                                 className="form-input"
                             />
                         </div>
                     </div>
 
-                    {/* Submit Button */}
                     <div className="submit-section">
                         <button onClick={handleSubmit} type="submit" className="submit-btn">
                             Submit
