@@ -1,142 +1,98 @@
-import React from 'react';
+import { useState } from 'react';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
 export default function AccountSetting() {
+  const [isEditable, setIsEditable] = useState(false);
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const toggleEdit = () => {
+    setIsEditable(!isEditable);
+    // Optional: save logic here
+  };
+
   return (
-    <div className="account-settings-container">
-      {/* Personal Info Card */}
-      <div className="personal-info-card">
-        <h5 className="section-title">Personal Info</h5>
-        
-        <div className="info-grid">
-          <div className="info-row">
-            <div className="info-item">
-              <span className="info-label">First name:</span>
-              <span className="info-value">Sumit</span>
-            </div>
+    <div className="account-settings-container d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div className="personal-info-card bg-white p-4 shadow rounded w-100" style={{ maxWidth: '600px' }}>
+        <h5 className="section-title border-bottom pb-2 mb-4 fw-bold">Personal Info</h5>
+
+        <Form>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={4}>First Name:</Form.Label>
+            <Col sm={8}>
+              <Form.Control
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="Enter first name"
+                disabled={!isEditable}
+              />
+            </Col>
+          </Form.Group>
+
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={4}>Last Name:</Form.Label>
+            <Col sm={8}>
+              <Form.Control
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Enter last name"
+                disabled={!isEditable}
+              />
+            </Col>
+          </Form.Group>
+
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={4}>Email:</Form.Label>
+            <Col sm={8}>
+              <Form.Control
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter email"
+                disabled={!isEditable}
+              />
+            </Col>
+          </Form.Group>
+
+          <Form.Group as={Row} className="mb-4">
+            <Form.Label column sm={4}>Password:</Form.Label>
+            <Col sm={8}>
+              <Form.Control
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+                disabled={!isEditable}
+              />
+            </Col>
+          </Form.Group>
+
+          <div className="edit-button-container d-flex justify-content-end">
+            <Button variant={isEditable ? 'primary' : 'outline-dark'} onClick={toggleEdit}>
+              {isEditable ? 'Save' : 'Edit'}
+            </Button>
           </div>
-          
-          <div className="info-row">
-            <div className="info-item">
-              <span className="info-label">Last name:</span>
-              <span className="info-value">Ray</span>
-            </div>
-          </div>
-          
-          <div className="info-row">
-            <div className="info-item">
-              <span className="info-label">Email:</span>
-              <span className="info-value">Sumit.ray@gmail.com</span>
-            </div>
-          </div>
-          
-          <div className="info-row">
-            <div className="info-item">
-              <span className="info-label">Password:</span>
-              <span className="info-value">••••••</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="edit-button-container">
-          <button className="edit-button">Edit</button>
-        </div>
+        </Form>
       </div>
-
-      <style jsx>{`
-        .account-settings-container {
-          padding: 0;
-          max-width: 600px;
-        }
-
-        .personal-info-card {
-          background-color: #f8f9fa;
-          border: 1px solid #e9ecef;
-          border-radius: 8px;
-          padding: 2rem;
-          position: relative;
-        }
-
-        .section-title {
-          font-size: 18px;
-          font-weight: 600;
-          color: #212529;
-          margin-bottom: 1.5rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 1px solid #dee2e6;
-        }
-
-        .info-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 1.25rem;
-        }
-
-        .info-row {
-          display: flex;
-          align-items: center;
-        }
-
-        .info-item {
-          display: flex;
-          width: 100%;
-          align-items: center;
-        }
-
-        .info-label {
-          font-weight: 600;
-          color: #495057;
-          font-size: 14px;
-          min-width: 120px;
-          margin-right: 1rem;
-        }
-
-        .info-value {
-          color: #212529;
-          font-size: 14px;
-          flex: 1;
-        }
-
-        .edit-button-container {
-          display: flex;
-          justify-content: flex-end;
-          margin-top: 2rem;
-        }
-
-        .edit-button {
-          background-color: transparent;
-          border: 1px solid #6c757d;
-          color: #495057;
-          padding: 0.5rem 1.5rem;
-          border-radius: 4px;
-          font-size: 14px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .edit-button:hover {
-          background-color: #495057;
-          color: white;
-          border-color: #495057;
-        }
-
-        @media (max-width: 768px) {
-          .personal-info-card {
-            padding: 1.5rem;
-          }
-          
-          .info-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.25rem;
-          }
-          
-          .info-label {
-            min-width: auto;
-            margin-right: 0;
-          }
-        }
-      `}</style>
     </div>
   );
 }

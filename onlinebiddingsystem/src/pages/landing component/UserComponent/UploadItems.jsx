@@ -1,5 +1,6 @@
 import "../../../styles/Landing/Userprofile/Upload.css"
 import { useState } from "react";
+import api from "../../../api";
 
 export default function UploadItems() {
     const [formData, setFormData] = useState({
@@ -31,23 +32,33 @@ export default function UploadItems() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+
+        const dataToSend = new FormData();
+        dataToSend.append('tittle', formData.title);
+        dataToSend.append('description', formData.description);
+        dataToSend.append('start_date', formData.startDate);
+        dataToSend.append('end_date', formData.endDate);
+        dataToSend.append('minium_date', formData.minimumBid);
+
+
         e.preventDefault();
-        console.log('Form submitted:', formData);
+        try {
+            const response = await api.post("/api/items/upload/", dataToSend, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
+            if (response === 201) {
+                console.log("upload successful", response.data)
+            }
+        } catch (error) {
+            alert(error?.response)
+        }
     };
 
     return (
         <div className="upload-container">
-            {/* Header Section */}
-            {/* <div className="upload-header">
-                <h2 className="upload-title">Your work Description</h2>
-                <p className="upload-description">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fugiaut nisl turpis leo sed
-                    in commodo purus velit. Massa ut dictumst praesent lacus, libero. Non placerat
-                    dictumst lacinia nisl at suscipit id porttitor purus. Magna diam purus egestas vel.
-                </p>
-                <button className="add-attachment-btn">Add attachment</button>
-            </div> */}
 
             {/* Upload Form */}
             <div className="upload-form">
@@ -140,7 +151,7 @@ export default function UploadItems() {
 
                     {/* Submit Button */}
                     <div className="submit-section">
-                        <button type="submit" className="submit-btn">
+                        <button onClick={handleSubmit} type="submit" className="submit-btn">
                             Submit
                         </button>
                     </div>

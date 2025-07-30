@@ -1,0 +1,316 @@
+/* Base Styles */
+.admin-container {
+  display: flex;
+  position: relative;
+}
+
+.admin-sidebar {
+  width: 280px;
+  background-color: #004663;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #004663 0%, #006B8A 100%);
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-title {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  flex: 1;
+}
+
+.mobile-close-btn {
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  padding: 0.5rem !important;
+  display: none;
+}
+
+.menu-section {
+  padding: 2rem 1.5rem 1rem;
+}
+
+.menu-title {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  margin-bottom: 0.5rem;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.menu-link:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  transform: translateX(5px);
+}
+
+.menu-link:active,
+.menu-link.active {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.menu-icon {
+  margin-right: 0.75rem;
+  width: 20px;
+  height: 20px;
+}
+
+.logout-section {
+  position: absolute;
+  bottom: 2rem;
+  left: 1.5rem;
+  right: 1.5rem;
+}
+
+.logout-btn {
+  background: transparent !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.main-content {
+  margin-left: 280px;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 280px);
+}
+
+.content-area {
+  padding: 2rem;
+}
+
+/* Mobile Navbar */
+.mobile-navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #004663 !important;
+  z-index: 1001;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.mobile-navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1rem;
+  height: 100%;
+}
+
+.mobile-menu-toggle {
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  padding: 0.5rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.mobile-navbar-title {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  /* Force show mobile navbar */
+  .mobile-navbar {
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  /* Override Bootstrap navbar defaults */
+  .navbar.mobile-navbar {
+    display: flex !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide desktop sidebar by default */
+  .admin-sidebar {
+    transform: translateX(-100%);
+    width: 300px;
+    z-index: 1002;
+  }
+
+  /* Show sidebar when mobile menu is open */
+  .admin-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Show mobile close button */
+  .mobile-close-btn {
+    display: block !important;
+  }
+
+  /* Adjust main content */
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding-top: 60px; /* Account for mobile navbar */
+  }
+
+  /* Adjust content padding for mobile */
+  .content-area {
+    padding: 1rem;
+  }
+
+  /* Adjust sidebar header for mobile */
+  .sidebar-header {
+    padding: 1.5rem 1rem;
+  }
+
+  .admin-title {
+    font-size: 1.1rem;
+  }
+
+  /* Adjust menu section padding */
+  .menu-section {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  /* Adjust logout section for mobile */
+  .logout-section {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  /* Further mobile optimizations */
+  .content-area {
+    padding: 0.75rem;
+  }
+
+  .sidebar-header {
+    padding: 1rem;
+  }
+
+  .menu-section {
+    padding: 1rem;
+  }
+
+  .menu-link {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .admin-sidebar {
+    width: 280px;
+  }
+}
+
+/* Smooth transitions for better UX */
+@media (prefers-reduced-motion: reduce) {
+  .admin-sidebar,
+  .main-content,
+  .mobile-menu-overlay,
+  .menu-link {
+    transition: none;
+  }
+}
+
+/* Focus states for accessibility */
+.menu-link:focus,
+.mobile-menu-toggle:focus,
+.logout-btn:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Active link styling */
+.menu-link[aria-current="page"] {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
