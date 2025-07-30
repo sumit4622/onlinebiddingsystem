@@ -28,7 +28,7 @@ export default function Dashboard() {
 
   const handleContinueAuction = () => {
     setShowAuctionModal(false);
-    navigate('/CreateAuction');
+    navigate('/UserProfile/upload');
   };
 
   const handleBidClick = (index) => {
