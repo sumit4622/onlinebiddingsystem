@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User  
+from .models import itemsUpload 
 
 
 class userRegisterSerializers(serializers.ModelSerializer):
@@ -19,3 +20,10 @@ class userRegisterSerializers(serializers.ModelSerializer):
             last_name = validated_data['last_name'],
         )
         return user
+    
+class itemsUploadSerializers(serializers.ModelSerializer):
+    
+    class Meta:
+        model = itemsUpload
+        fields = '__all__'
+
