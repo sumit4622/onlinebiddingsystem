@@ -1,79 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function DroppedBid() {
-  const [bids, setBids] = useState([
-    {
-      id: 'BID001',
-      title: 'Vintage Leather Jacket',
-      description: 'A classic vintage leather jacket from the 80s, well-preserved with minor wear...',
-      imageUrl: 'https://placehold.co/100x100/e0e0e0/ffffff?text=Jacket',
-      minBid: 4000,
-      startDate: '2025-08-01',
-      endDate: '2025-08-10',
-      submittedBy: 'john_doe',
-      submittedOn: '2025-07-28',
-      status: 'pending',
-      category: 'Apparel'
-    },
-    {
-      id: 'BID002',
-      title: 'Hand-painted Ceramic Vase',
-      description: 'Exquisite hand-painted ceramic vase with intricate floral patterns...',
-      imageUrl: 'https://placehold.co/100x100/d0d0d0/ffffff?text=Vase',
-      minBid: 7500,
-      startDate: '2025-08-05',
-      endDate: '2025-08-15',
-      submittedBy: 'jane_smith',
-      submittedOn: '2025-07-29',
-      status: 'pending',
-      category: 'Home Decor'
-    },
-    {
-      id: 'BID002',
-      title: 'Hand-painted Ceramic Vase',
-      description: 'Exquisite hand-painted ceramic vase with intricate floral patterns...',
-      imageUrl: 'https://placehold.co/100x100/d0d0d0/ffffff?text=Vase',
-      minBid: 7500,
-      startDate: '2025-08-05',
-      endDate: '2025-08-15',
-      submittedBy: 'jane_smith',
-      submittedOn: '2025-07-29',
-      status: 'pending',
-      category: 'Home Decor'
-    },
-    {
-      id: 'BID002',
-      title: 'Hand-painted Ceramic Vase',
-      description: 'Exquisite hand-painted ceramic vase with intricate floral patterns...',
-      imageUrl: 'https://placehold.co/100x100/d0d0d0/ffffff?text=Vase',
-      minBid: 7500,
-      startDate: '2025-08-05',
-      endDate: '2025-08-15',
-      submittedBy: 'jane_smith',
-      submittedOn: '2025-07-29',
-      status: 'pending',
-      category: 'Home Decor'
-    },
-    {
-      id: 'BID002',
-      title: 'Hand-painted Ceramic Vase',
-      description: 'Exquisite hand-painted ceramic vase with intricate floral patterns...',
-      imageUrl: 'https://placehold.co/100x100/d0d0d0/ffffff?text=Vase',
-      minBid: 7500,
-      startDate: '2025-08-05',
-      endDate: '2025-08-15',
-      submittedBy: 'jane_smith',
-      submittedOn: '2025-07-29',
-      status: 'pending',
-      category: 'Home Decor'
-    },
-  ]);
-
+  const [bids, setBids] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('pending');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [messageContent, setMessageContent] = useState('');
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/items/')
+      .then(res => {
+        const formattedBids = res.data.map((item, index) => ({
+          id: `BID${(index + 1).toString().padStart(3, '0')}`,
+          title: item.title,
+          description: item.description,
+          imageUrl: `http://127.0.0.1:8000${item.image}`,  // Fixed image path
+          minBid: parseFloat(item.minimum_bid),
+          startDate: item.start_date,
+          endDate: item.end_date,
+          submittedBy: item.username || 'Unknown User',
+          submittedOn: item.created_at ? item.created_at.split('T')[0] : 'Unknown',
+          status: 'pending',
+          category: item.category || 'General',
+        }));
+        setBids(formattedBids);
+      })
+      .catch(err => {
+        console.error('Error fetching items:', err);
+      });
+  }, []);
 
   const handleBidAction = (bidId, action) => {
     setBids(prev =>

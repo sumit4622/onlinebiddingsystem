@@ -1,18 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import Header from './landing component/Header';
 import LogoutModal from "./login/LogoutModal";
-import { useNavigate } from 'react-router-dom';
 import SureModal from '../landingPage/Components/SureModal';
-
-import SanImage from "../assets/SAN.png";
-import "../App.css";
+import { useNavigate } from 'react-router-dom';
+import api from "../api"; // Your axios config
 
 export default function Dashboard() {
   const [sortBy, setSortBy] = useState('');
   const [showAuctionModal, setShowAuctionModal] = useState(false); 
   const [activeBidIndex, setActiveBidIndex] = useState(null); 
+  const [approvedBids, setApprovedBids] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchApprovedBids();
+  }, []);
+
+  const fetchApprovedBids = async () => {
+    try {
+      const res = await api.get("/api/items/");
+      const approved = res.data.filter(item => item.is_approved); // Adjust if field name differs
+      setApprovedBids(approved);
+    } catch (err) {
+      console.error("Failed to fetch approved bids", err);
+    }
+  };
 
   const handleSortChange = (event) => {
     setSortBy(event.target.value);
@@ -44,21 +57,12 @@ export default function Dashboard() {
     navigate('/auction');
   };
 
-  const Action = [
-    { Tittle: 'Sumit', secondTittle: 'timus' },
-    { Tittle: 'Sumi', secondTittle: 'timu' },
-    { Tittle: 'Sum', secondTittle: 'tim' },
-    { Tittle: 'Su', secondTittle: 'ti' },
-    { Tittle: 'S', secondTittle: 't' },
-    { Tittle: 'ray', secondTittle: 'ray' }
-  ];
-
   return (
     <>
       <LogoutModal />
       <Header />
 
-      <div className='py-5 py-md-5 py-lg-5' style={{ backgroundColor: '#004663' }}>
+      <div className='py-5' style={{ backgroundColor: '#004663' }}>
         <div className="container">
           <div className="d-flex justify-content-between align-items-center ">
             <h1 className="text-white fw-bold mb-0 m-3"
@@ -83,21 +87,25 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className='container' >
-        <div className="row" >
-          {Action.map((item, index) => (
-            <div key={index} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4" >
+      <div className='container'>
+        <div className="row">
+          {approvedBids.map((item, index) => (
+            <div key={item.id} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4">
               <div className="card h-100">
-                <div className="card-body" style={{width: "18rem;"}}>
-                  <img src={SanImage} alt="CardImage" style={{ width: '100%', height: 'auto' }} />
-                  <h5 className="card-title">{item.Tittle}</h5>
-                  <h6 className="card-subtitle mb-2 text-muted ">{item.secondTittle}</h6>
-                  <p className='text-justify'>This is a smart watch which is great for young people.</p>
+                <div className="card-body">
+                  <img
+                    src={`http://localhost:8000${item.image}`}
+                    alt="Auction Item"
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                  <h5 className="card-title">{item.title}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">{item.description}</h6>
+                  <p className='text-justify'>Auction Duration: {item.start_date} to {item.end_date}</p>
                   <hr />
                   <div className="d-flex justify-content-between align-items-center mb-3">
-                    <p className='fw-bold mb-0 col-sm-5'>Rs: 4000</p>
-                    <div className="Duration rounded-pill pt-2 pb-2 px-lg-3 px-sm-2 text-white flex-shrink-0" style={{ backgroundColor: '#3C3C43' }}>
-                      <p className='mb-0 text-nowrap'>2d 7hr 40min</p>
+                    <p className='fw-bold mb-0'>Rs: {item.minimum_bid}</p>
+                    <div className="Duration rounded-pill pt-2 pb-2 px-lg-3 text-white flex-shrink-0" style={{ backgroundColor: '#3C3C43' }}>
+                      <p className='mb-0'>Check Auction Page</p>
                     </div>
                   </div>
                   <hr />
