@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/adminCSS/Login.css';
+import adminapi from '../../adminapi';
 
 export default function Login() {
   const [formValues, setFormValues] = useState({
@@ -18,18 +19,27 @@ export default function Login() {
     }));
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    const { username, password } = formValues;
-
-
-    if (username === 'admin' && password === 'admin123') {
-      localStorage.setItem("user", JSON.stringify({ username }));
+    try {
+      const response = await adminapi.post("/api/admin-login/", formValues);
+      alert("login successful", response.data);
       navigate('/admin/admin-layout');
-    } else {
-      alert("Invalid credentials. Try: admin / admin123");
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        alert('Error:', error.message);
+      }
+      console.log(error.config);
     }
+
+
   };
 
   return (
