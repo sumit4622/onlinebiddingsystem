@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { fetchItems, approveBid, rejectBid } from '../../services/adminServices';
 
 export default function DroppedBid() {
   const [bids, setBids] = useState([]);
@@ -8,15 +7,18 @@ export default function DroppedBid() {
   const [statusFilter, setStatusFilter] = useState('pending');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [messageContent, setMessageContent] = useState('');
+  const [error, setError] = useState('');
 
+  // Fetch bids on component mount
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/items/')
-      .then(res => {
-        const formattedBids = res.data.map((item, index) => ({
+    const loadBids = async () => {
+      try {
+        const data = await fetchItems();
+        const formatted = data.map((item, index) => ({
           id: `BID${(index + 1).toString().padStart(3, '0')}`,
           title: item.title,
           description: item.description,
-          imageUrl: `http://127.0.0.1:8000${item.image}`,  // Fixed image path
+          imageUrl: `http://127.0.0.1:8000${item.image}`,  
           minBid: parseFloat(item.minimum_bid),
           startDate: item.start_date,
           endDate: item.end_date,
@@ -25,18 +27,26 @@ export default function DroppedBid() {
           status: 'pending',
           category: item.category || 'General',
         }));
-        setBids(formattedBids);
-      })
-      .catch(err => {
-        console.error('Error fetching items:', err);
-      });
+        setBids(formatted);
+      } catch (err) {
+        setError('Failed to fetch bids.');
+      }
+    };
+
+    loadBids();
   }, []);
 
-  const handleBidAction = (bidId, action) => {
-    setBids(prev =>
-      prev.map(b => (b.id === bidId ? { ...b, status: action } : b))
-    );
-    setMessageContent(`Bid ${bidId} has been ${action}.`);
+  const handleBidAction = async (bidId, action) => {
+    try {
+      if (action === 'approved') {
+        await approveBid(bidId);
+      } else {
+        await rejectBid(bidId);
+      }
+      setMessageContent(`Bid ${bidId} has been ${action}.`);
+    } catch (err) {
+      setError(`Failed to ${action} bid ${bidId}`);
+    }
   };
 
   const filteredBids = bids.filter(bid => {
@@ -44,10 +54,8 @@ export default function DroppedBid() {
       bid.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       bid.submittedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
       bid.id.toLowerCase().includes(searchTerm.toLowerCase());
-
     const matchStatus = !statusFilter || bid.status === statusFilter;
     const matchCategory = !categoryFilter || bid.category === categoryFilter;
-
     return matchSearch && matchStatus && matchCategory;
   });
 
@@ -55,18 +63,14 @@ export default function DroppedBid() {
 
   return (
     <div className="p-0">
-      <h1 className="text-white fw-bold p-3"
-        style={{
-          fontFamily: "fw-bold",
-          fontSize: "clamp(2.5rem, 6vw, 5rem)",
-          minWidth: "fit-content",
-          backgroundColor: "#004663"
-        }}>
+      <h1 className="text-white fw-bold p-3" style={{ backgroundColor: "#004663" }}>
         Dropped Bid
       </h1>
+
       <div className="container mt-5">
+        {error && <div className="alert alert-danger">{error}</div>}
 
-
+        {/* Filters */}
         <div className="row mb-4">
           <div className="col-md">
             <input
@@ -78,11 +82,7 @@ export default function DroppedBid() {
             />
           </div>
           <div className="col-md">
-            <select
-              className="form-select"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
+            <select className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="">Filter by Status</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
@@ -90,31 +90,21 @@ export default function DroppedBid() {
             </select>
           </div>
           <div className="col-md">
-            <select
-              className="form-select"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-            >
+            <select className="form-select" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
               <option value="">Filter by Category</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
+              {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
             </select>
           </div>
         </div>
 
+        {/* Cards */}
         <div className="row">
           {filteredBids.map(bid => (
             <div className="col-md-4 mb-4" key={bid.id}>
               <div className="card h-100">
                 <div className="card-body d-flex flex-column">
                   <div className="d-flex mb-3">
-                    <img
-                      src={bid.imageUrl}
-                      alt={bid.title}
-                      className="me-3 rounded"
-                      style={{ width: '80px', height: '80px', objectFit: 'cover' }}
-                    />
+                    <img src={bid.imageUrl} alt={bid.title} className="me-3 rounded" style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
                     <div>
                       <h5 className="card-title mb-1">{bid.title}</h5>
                       <p className="mb-0 small text-muted">Submitted by: {bid.submittedBy}</p>
@@ -125,26 +115,15 @@ export default function DroppedBid() {
                   <p className="card-text mb-1"><strong>Minimum Bid:</strong> Rs {bid.minBid.toLocaleString()}</p>
                   <p className="card-text mb-3"><strong>Period:</strong> {bid.startDate} to {bid.endDate}</p>
                   <div className="mt-auto d-flex justify-content-between">
-                    <button
-                      className="btn btn-success"
-                      onClick={() => handleBidAction(bid.id, 'approved')}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleBidAction(bid.id, 'rejected')}
-                    >
-                      Reject
-                    </button>
+                    <button className="btn btn-success" onClick={() => handleBidAction(bid.id, 'approved')}>Approve</button>
+                    <button className="btn btn-danger" onClick={() => handleBidAction(bid.id, 'rejected')}>Reject</button>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-          {filteredBids.length === 0 && (
-            <p className="text-center text-muted">No bids match the selected filters.</p>
-          )}
+
+          {filteredBids.length === 0 && <p className="text-center text-muted">No bids match the selected filters.</p>}
         </div>
 
         {messageContent && (
@@ -154,6 +133,6 @@ export default function DroppedBid() {
           </div>
         )}
       </div>
-    </ div>
+    </div>
   );
 }

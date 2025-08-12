@@ -11,7 +11,7 @@ export default function AdminLayout() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const closeMobileMenu = ()  => setIsMobileMenuOpen(false);
 
   return (
     <div className="admin-container">

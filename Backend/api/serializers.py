@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib import admin
 from django.contrib.auth.models import User  
 from .models import itemsUpload 
 
@@ -20,6 +21,10 @@ class userRegisterSerializers(serializers.ModelSerializer):
             last_name = validated_data['last_name'],
         )
         return user
+    
+class adminloginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
     
 class itemsUploadSerializers(serializers.ModelSerializer):
     

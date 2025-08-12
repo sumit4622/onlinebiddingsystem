@@ -37,7 +37,7 @@ export default function App() {
         <Route path="/auction" element={<ProtectedRoute><AuctionPage /></ProtectedRoute>} />
         <Route path="/CreateAuction" element={<ProtectedRoute><CreateAuction /></ProtectedRoute>} />
 
-        {/* User Profile with nested tabs */}
+        
         <Route path="/UserProfile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>}>
           <Route index element={<BiddingHistory />} />
           <Route path="bidding" element={<BiddingHistory />} />
@@ -47,7 +47,7 @@ export default function App() {
 
         <Route path="/admin" element={<Login />} />
 
-        <Route path="/admin/admin-layout" element={<AdminWrapper />}>
+        <Route path="/admin/admin-layout/" element={<AdminWrapper />}>
           <Route path="dropped-bid" element={<DroppedBid />} />
           <Route path="manage-user" element={<ManageUser />} />
           <Route path="customer-review" element={<CustomerReview />} />
