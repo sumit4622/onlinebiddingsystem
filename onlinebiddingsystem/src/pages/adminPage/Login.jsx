@@ -25,7 +25,7 @@ export default function Login() {
     try {
       const response = await adminapi.post("/api/admin-login/", formValues);
       alert("login successful", response.data);
-      navigate('/admin/admin-layout');
+      navigate('/admin/admin-layout/dropped-bid');
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);

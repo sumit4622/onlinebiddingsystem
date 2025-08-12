@@ -4,7 +4,7 @@ import { ACCESS_TOKEN } from "../../../constants";
 import api from "../../../api";
 
 export default function UploadItems() {
-    const token = localStorage.getItem(ACCESS_TOKEN); // or just "accessToken" if that's how you saved it
+    const token = localStorage.getItem(ACCESS_TOKEN); 
 
     const [formData, setFormData] = useState({
         title: '',
