@@ -39,14 +39,16 @@ export default function DroppedBid() {
     try {
       if (action === 'approved') {
         await approveBid(bidId);
-      } else {
+        console.log(`${bidId} is ${action} made`)
+      } else if (action === "rejected") {
+        console.log(`${bidId} is ${action} made`)
         await rejectBid(bidId);
       }
       setBids(prevBids =>
-      prevBids.map(bid =>
-        bid.id === bidId ? { ...bid, status: action } : bid
-      )
-    );
+        prevBids.map(bid =>
+          bid.id === bidId ? { ...bid, status: action } : bid
+        )
+      );
       setMessageContent(`Bid ${bidId} has been ${action}.`);
     } catch (err) {
       setError(`Failed to ${action} bid ${bidId}`);
@@ -87,7 +89,6 @@ export default function DroppedBid() {
           </div>
           <div className="col-md">
             <select className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="">Filter by Status</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
