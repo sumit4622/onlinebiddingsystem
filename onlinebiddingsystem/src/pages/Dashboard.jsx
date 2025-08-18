@@ -4,12 +4,13 @@ import Header from './landing component/Header';
 import LogoutModal from "./login/LogoutModal";
 import SureModal from '../landingPage/Components/SureModal';
 import { useNavigate } from 'react-router-dom';
-import api from "../api"; // Your axios config
+import api from "../api";
+import TimeCompact from './Support/compactTime';
 
 export default function Dashboard() {
   const [sortBy, setSortBy] = useState('');
-  const [showAuctionModal, setShowAuctionModal] = useState(false); 
-  const [activeBidIndex, setActiveBidIndex] = useState(null); 
+  const [showAuctionModal, setShowAuctionModal] = useState(false);
+  const [activeBidIndex, setActiveBidIndex] = useState(null);
   const [approvedBids, setApprovedBids] = useState([]);
   const navigate = useNavigate();
 
@@ -20,7 +21,7 @@ export default function Dashboard() {
   const fetchApprovedBids = async () => {
     try {
       const res = await api.get("/api/items/");
-      const approved = res.data.filter(item => item.is_approved); // Adjust if field name differs
+      const approved = res.data.filter(item => item.is_approved);
       setApprovedBids(approved);
     } catch (err) {
       console.error("Failed to fetch approved bids", err);
@@ -44,8 +45,8 @@ export default function Dashboard() {
     navigate('/UserProfile/upload');
   };
 
-  const handleBidClick = (index) => {
-    setActiveBidIndex(index);
+  const handleBidClick = (item) => {
+    setActiveBidIndex(item);
   };
 
   const handleCloseBidModal = () => {
@@ -54,13 +55,13 @@ export default function Dashboard() {
 
   const handleContinueBid = () => {
     setActiveBidIndex(null);
-    navigate('/auction');
+    navigate(`/auction/${activeBidIndex.id}`, { state: { item: activeBidIndex } });
   };
 
   return (
     <>
       <LogoutModal />
-      <Header />
+      <Header /> 
 
       <div className='py-5' style={{ backgroundColor: '#004663' }}>
         <div className="container">
@@ -89,29 +90,27 @@ export default function Dashboard() {
 
       <div className='container'>
         <div className="row">
-          {approvedBids.map((item, index) => (
+          {approvedBids.map((item) => (
             <div key={item.id} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4">
               <div className="card h-100">
                 <div className="card-body">
                   <img
                     src={`http://localhost:8000${item.image}`}
                     alt="Auction Item"
-                    style={{ width: '100%', height: 'auto' }}
+                    style={{ width: '100%', height: '12rem' }}
                   />
                   <h5 className="card-title">{item.title}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">{item.description}</h6>
-                  <p className='text-justify'>Auction Duration: {item.start_date} to {item.end_date}</p>
                   <hr />
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <p className='fw-bold mb-0'>Rs: {item.minimum_bid}</p>
-                    <div className="Duration rounded-pill pt-2 pb-2 px-lg-3 text-white flex-shrink-0" style={{ backgroundColor: '#3C3C43' }}>
-                      <p className='mb-0'>Check Auction Page</p>
-                    </div>
+                    <TimeCompact end={item.end_date} />
                   </div>
-                  <hr />
-                  <button className='btn btn-dark' style={{ backgroundColor: '#3C3C43' }} onClick={() => handleBidClick(index)}>Start Bid</button>
 
-                  {activeBidIndex === index && (
+                  <hr />
+                  <button className='btn btn-dark' style={{ backgroundColor: '#3C3C43' }} onClick={() => handleBidClick(item)}>Start Bid</button>
+
+                  {activeBidIndex === item && (
                     <SureModal onClose={handleCloseBidModal} onContinue={handleContinueBid} />
                   )}
                 </div>

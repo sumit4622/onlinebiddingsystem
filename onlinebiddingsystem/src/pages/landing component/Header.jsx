@@ -5,7 +5,7 @@ import LoginModal from "../../pages/login/LoginModal.jsx";
 import LogoutModal from "../login/LogoutModal.jsx";
 import { ACCESS_TOKEN } from "../../constants.js";
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar  } from "antd"
+import { Avatar } from "antd"
 import '../../App.css'
 
 export default function Header() {
@@ -15,8 +15,15 @@ export default function Header() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
-  const handleNavigate = () =>{
+  const handleNavigate = () => {
     navigate('/UserProfile')
+  }
+
+  const handleHomeNavigate = () =>{
+    navigate('/')
+  }
+  const handleAuctionNavigate = () =>{
+    navigate('/dashboard')
   }
 
   useEffect(() => {
@@ -26,8 +33,8 @@ export default function Header() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a className="navbar-brand" href="#Home">Online Bidding</a>
+      <nav className="navbar  navbar-expand-lg navbar-light bg-light fixed-top">
+        <a className="navbar-brand" >Online Bidding</a>
         <button
           className="navbar-toggler"
           type="button"
@@ -40,26 +47,19 @@ export default function Header() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item active">
-              <a className="nav-link" href="#current">Home</a>
+              <a className="nav-link" href="#Home" onClick={handleHomeNavigate}>Home</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#Auction">Auction</a>
+              <a className="nav-link" href="#Auction" onClick={handleAuctionNavigate}>Auction</a>
             </li>
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#!" role="button" data-bs-toggle="dropdown">
-                Dropdown
-              </a>
-              <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#Contact">Contact Us</a></li>
-                <li><a className="dropdown-item" href="#join">Join Us</a></li>
-              </ul>
+            <li className="nav-item">
+              <a className="nav-link" href="#Contact">Contact Us</a>
             </li>
           </ul>
-
           <form className="d-flex gap-3 px-3">
             <input className="form-control me-2" type="search" placeholder="Search" />
             <button className="btn btn-outline-primary" type="submit">Search</button>
-
+ 
             {isLoggedIn ? (
               <>
                 <button
@@ -71,7 +71,7 @@ export default function Header() {
                 </button>
 
                 <div className="profile ">
-                  <Avatar onClick={handleNavigate}style={{ backgroundColor: '#87d068' }} size={"large"} icon={<UserOutlined />} />                
+                  <Avatar onClick={handleNavigate} style={{ backgroundColor: '#87d068' }} size={"large"} icon={<UserOutlined />} />
                 </div>
               </>
             ) : (

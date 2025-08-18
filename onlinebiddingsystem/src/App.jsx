@@ -34,7 +34,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/auction" element={<ProtectedRoute><AuctionPage /></ProtectedRoute>} />
+        <Route path="/auction/:id" element={<ProtectedRoute><AuctionPage /></ProtectedRoute>} />
         <Route path="/CreateAuction" element={<ProtectedRoute><CreateAuction /></ProtectedRoute>} />
 
         

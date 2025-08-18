@@ -10,7 +10,7 @@ import Works from './landing component/Works.jsx';
 
 export default function LandingPage() {
   return (
-    <div>
+    <div id='Home'>
       <Home />
       <Auction />
       <Works />
