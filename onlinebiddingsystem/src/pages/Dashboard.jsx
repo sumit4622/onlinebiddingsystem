@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import api from "../api";
 import TimeCompact from './Support/compactTime';
 
-export default function Dashboard({ end_date }) {
+export default function Dashboard() {
   const [sortBy, setSortBy] = useState('');
   const [showAuctionModal, setShowAuctionModal] = useState(false);
   const [activeBidIndex, setActiveBidIndex] = useState(null);
@@ -61,7 +61,7 @@ export default function Dashboard({ end_date }) {
   return (
     <>
       <LogoutModal />
-      <Header />
+      <Header /> 
 
       <div className='py-5' style={{ backgroundColor: '#004663' }}>
         <div className="container">
