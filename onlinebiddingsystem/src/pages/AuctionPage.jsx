@@ -10,7 +10,7 @@ export default function AuctionPage() {
   const { id } = useParams();
   const location = useLocation();
   const item = location.state?.item;
-
+ 
   const minBid = 500;
   const maxBid = 10000;
   const bidIncrement = 100;
