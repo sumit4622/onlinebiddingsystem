@@ -4,8 +4,8 @@ import Header from './landing component/Header';
 import LogoutModal from "./login/LogoutModal";
 import SureModal from '../landingPage/Components/SureModal';
 import { useNavigate } from 'react-router-dom';
-import Time from './Support/Time';
-import api from "../api"; 
+import api from "../api";
+import TimeCompact from './Support/compactTime';
 
 export default function Dashboard({ end_date }) {
   const [sortBy, setSortBy] = useState('');
@@ -45,8 +45,8 @@ export default function Dashboard({ end_date }) {
     navigate('/UserProfile/upload');
   };
 
-  const handleBidClick = (index) => {
-    setActiveBidIndex(index);
+  const handleBidClick = (item) => {
+    setActiveBidIndex(item);
   };
 
   const handleCloseBidModal = () => {
@@ -55,7 +55,7 @@ export default function Dashboard({ end_date }) {
 
   const handleContinueBid = () => {
     setActiveBidIndex(null);
-    navigate('/auction');
+    navigate(`/auction/${activeBidIndex.id}`, { state: { item: activeBidIndex } });
   };
 
   return (
@@ -90,7 +90,7 @@ export default function Dashboard({ end_date }) {
 
       <div className='container'>
         <div className="row">
-          {approvedBids.map((item, index) => (
+          {approvedBids.map((item) => (
             <div key={item.id} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4">
               <div className="card h-100">
                 <div className="card-body">
@@ -104,13 +104,13 @@ export default function Dashboard({ end_date }) {
                   <hr />
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <p className='fw-bold mb-0'>Rs: {item.minimum_bid}</p>
-                    <Time end={item.end_date} />
+                    <TimeCompact end={item.end_date} />
                   </div>
 
                   <hr />
-                  <button className='btn btn-dark' style={{ backgroundColor: '#3C3C43' }} onClick={() => handleBidClick(index)}>Start Bid</button>
+                  <button className='btn btn-dark' style={{ backgroundColor: '#3C3C43' }} onClick={() => handleBidClick(item)}>Start Bid</button>
 
-                  {activeBidIndex === index && (
+                  {activeBidIndex === item && (
                     <SureModal onClose={handleCloseBidModal} onContinue={handleContinueBid} />
                   )}
                 </div>
