@@ -1,4 +1,3 @@
-import uuid
 from django.db import models
 
 # Create your models here.
@@ -14,7 +13,6 @@ from django.db import models
 #     username = models.CharField( max_length=50, unique = True)
 
 class itemsUpload(models.Model):
-    bid_code = models.CharField(max_length=20, unique=True, blank=True)  
     title = models.CharField(max_length=255)
     description = models.TextField()
     start_date = models.DateField()
@@ -25,9 +23,6 @@ class itemsUpload(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_approved = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        if not self.bid_code:
-            self.bid_code = "BID" + (uuid.uuid5()).replace("-","")[:5].upper()
 
     def __str__(self):
         return self.title

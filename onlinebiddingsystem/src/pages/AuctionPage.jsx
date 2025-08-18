@@ -1,13 +1,15 @@
 import Header from "./landing component/Header";
 import { useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
-
-
-import SanImage from "../assets/SAN.png";
 import HigestBid from "./landing component/PagesComponents/HigestBid";
+import TimeBoxes from "./Support/BoxTime";
 
 export default function AuctionPage() {
   const [value, setValue] = useState(500);
+  const { id } = useParams();
+  const location = useLocation();
+  const item = location.state?.item;
 
   const minBid = 500;
   const maxBid = 10000;
@@ -41,37 +43,24 @@ export default function AuctionPage() {
       <Header />
       <div className=" container d-flex justify-content-md-around" style={{ marginTop: '4rem' }}>
         <div className="imgcontainer">
-          <img src={SanImage} alt="BidImage" style={{ width: '650px', height: 'auto' }} />
+          <img src={`http://localhost:8000${item.image}`} alt="BidImage" style={{ width: '650px', height: 'auto' }} />
         </div>
         <div className="infoContainer ">
-          <h1 className="headerTittle fs-1 fw-bold"> SAN </h1>
-          <h6 className="author fs-3 fst-italic"> By Ranjech Thakur</h6>
+          <h1 className="headerTittle fs-1 fw-bold"> {item.title} </h1>
+          <h6 className="author fs-3 fst-italic"> By {item.author}</h6>
 
           <div className="amount">
             <h5 className="biddingamount fs-4 text-primary">Current Bid</h5>
-            <div className="amount fs-4 text-primary">6000</div>
+            <div className="amount fs-4 text-primary">{item.minimum_bid}</div>
           </div>
           <h6 className="tittle bold">Time left:</h6>
           <div className="timeleft d-flex gap-3">
-            {['Days', 'Hours', 'Minute', 'Second'].map((label, i) => (
-              <div key={i} className="text-center">
-                <div className="d-flex fs-3 justify-content-center align-items-center"
-                  style={{
-                    height: '4rem',
-                    width: '5rem',
-                    backgroundColor: '#004663',
-                    color: 'white'
-                  }}>
-                  45
-                </div>
-                {label}
-              </div>
-            ))}
+                  <TimeBoxes end={item.end_date} />
           </div>
 
           <div className="endDate d-flex gap-2">
             <p className="fw-bold"> Auction ends:</p>
-            <p> 16.4.2023  08:05:33 PM</p>
+            <p> {item.end_date}  08:05:33 PM</p>
           </div>
 
           <hr />

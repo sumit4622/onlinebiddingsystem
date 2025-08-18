@@ -9,22 +9,21 @@ export default function DroppedBid() {
   const [messageContent, setMessageContent] = useState('');
   const [error, setError] = useState('');
 
-  // Fetch bids on component mount
   useEffect(() => {
     const loadBids = async () => {
       try {
         const data = await fetchItems();
         const formatted = data.map((item, index) => ({
-          id: `BID${(index + 1).toString().padStart(3, '0')}`,
+          id: `${(index + 1).toString().padStart(3, '0')}`,
           title: item.title,
           description: item.description,
-          imageUrl: `http://127.0.0.1:8000${item.image}`,  
+          imageUrl: `http://127.0.0.1:8000${item.image}`,
           minBid: parseFloat(item.minimum_bid),
           startDate: item.start_date,
           endDate: item.end_date,
           submittedBy: item.username || 'Unknown User',
           submittedOn: item.created_at ? item.created_at.split('T')[0] : 'Unknown',
-          status: 'pending',
+          status: item.is_approved === true ? 'approved' : 'pending',
           category: item.category || 'General',
         }));
         setBids(formatted);
@@ -40,9 +39,16 @@ export default function DroppedBid() {
     try {
       if (action === 'approved') {
         await approveBid(bidId);
-      } else {
+        console.log(`${bidId} is ${action} made`)
+      } else if (action === "rejected") {
+        console.log(`${bidId} is ${action} made`)
         await rejectBid(bidId);
       }
+      setBids(prevBids =>
+        prevBids.map(bid =>
+          bid.id === bidId ? { ...bid, status: action } : bid
+        )
+      );
       setMessageContent(`Bid ${bidId} has been ${action}.`);
     } catch (err) {
       setError(`Failed to ${action} bid ${bidId}`);
@@ -83,7 +89,6 @@ export default function DroppedBid() {
           </div>
           <div className="col-md">
             <select className="form-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="">Filter by Status</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
