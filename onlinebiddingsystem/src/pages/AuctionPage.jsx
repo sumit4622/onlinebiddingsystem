@@ -47,7 +47,7 @@ export default function AuctionPage() {
         </div>
         <div className="infoContainer ">
           <h1 className="headerTittle fs-1 fw-bold"> {item.title} </h1>
-          <h6 className="author fs-3 fst-italic"> By {item.author}</h6>
+          <h6 className="author fs-3 fst-italic"> By {item.user.first_name} {item.user.last_name}</h6>
 
           <div className="amount">
             <h5 className="biddingamount fs-4 text-primary">Current Bid</h5>
@@ -60,7 +60,7 @@ export default function AuctionPage() {
 
           <div className="endDate d-flex gap-2">
             <p className="fw-bold"> Auction ends:</p>
-            <p> {item.end_date}  08:05:33 PM</p>
+            <p> {item.end_date}  </p>
           </div>
 
           <hr />

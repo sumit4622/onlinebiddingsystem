@@ -138,7 +138,7 @@ export default function UserProfile() {
                   border: '1px solid #e9ecef'
                 }}
               >
-                <Outlet />
+                <Outlet context={{userData}}/>
               </div>
             </div>
           </div>

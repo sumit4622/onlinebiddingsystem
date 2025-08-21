@@ -1,12 +1,15 @@
 import "../../../styles/Landing/Userprofile/Upload.css";
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../../constants";
 import api from "../../../api";
 
 export default function UploadItems() {
     const token = localStorage.getItem(ACCESS_TOKEN); 
+    const {userData} = useOutletContext();
 
     const [formData, setFormData] = useState({
+        user: "",
         title: '',
         description: '',
         start_date: '',
@@ -42,6 +45,7 @@ export default function UploadItems() {
         dataToSend.append("start_date", formData.start_date);
         dataToSend.append("end_date", formData.end_date);
         dataToSend.append("minimum_bid", formData.minimum_bid);
+        dataToSend.append("user", userData.id);
         if (imageFile) {
             dataToSend.append("image", imageFile);
         }

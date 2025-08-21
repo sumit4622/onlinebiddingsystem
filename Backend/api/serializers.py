@@ -27,6 +27,7 @@ class adminloginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     
 class itemsUploadSerializers(serializers.ModelSerializer):
+    user = userRegisterSerializers(read_only=True)
     
     class Meta:
         model = itemsUpload
