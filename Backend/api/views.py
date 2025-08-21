@@ -6,6 +6,11 @@ from .models import itemsUpload
 from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.mail import send_mail
+from django.conf import settings
+from rest_framework.decorators import api_view
+from django.core.mail import EmailMessage
+
 
 @api_view(['POST'])
 def userRegistration(request):
@@ -16,7 +21,6 @@ def userRegistration(request):
     return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
 def currentUser(request):
     serializer = userRegisterSerializers(request.user)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -45,7 +49,7 @@ def adminLoginView(request):
 def uploadItems(request):
     serializer = itemsUploadSerializers(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     print("Upload validation error:", serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -58,14 +62,41 @@ def itemsUploadList(request):
 
 @api_view(['POST'])
 def approve_bid(request, id):
+    print(f"{id} is approved thank you.")
     item = get_object_or_404(itemsUpload, id=id)
     item.is_approved = True
     item.save()
+
+    try:
+        send_mail(
+            subject="Your Bidding Request has been Approved",
+            message=f"Hello {item.user.first_name} {item.user.last_name},\n\n"
+                    f"Congratulations! Your bidding request for '{item.title}' has been approved.",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[item.user.email],
+            fail_silently=False
+        )
+    except Exception as e:
+        print("Error Sennding email", e)
     return Response({"message": f"Item {id} approved successfully"}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def reject_bid(request, id):
+    print(f"{id} is Re thank you.")
     item = get_object_or_404(itemsUpload, id=id)
     item.is_approved = False
     item.save()
+    try:
+        send_mail(
+            subject="Your Bidding request has been Reject",
+            message=f"Hello {item.user.first_name} {item.user.last_name},"
+            f" Sorry! Your bidding request has been rejected for {item.title} has been reject ",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[item.user.email],
+            fail_silently=False
+        )
+    except Exception as e:
+        print("Error sending email", e)
     return Response({"message": f"Item {id} rejected successfully"}, status=status.HTTP_200_OK)
+
+
