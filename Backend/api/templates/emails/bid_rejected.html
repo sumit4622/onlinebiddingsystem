@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid Approved</title>
+</head>
+<body>
+    
+    <div style="max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-top: 5px solid #ff6b6b;">
+       
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="display: inline-block; background: linear-gradient(135deg, #ff6b6b, #ee5a52); color: white; padding: 15px 25px; border-radius: 50px; font-size: 14px; font-weight: bold;">
+                 BID REJECTION
+            </div>
+        </div>
+       
+        
+        <h2 style="color: #333; margin-bottom: 25px; font-size: 24px; font-weight: 600;">
+            Hello {{ user_name }}! 
+        </h2>
+       
+        <p style="font-size: 18px; line-height: 1.7; color: #444; margin-bottom: 20px;">
+            Thank you for your interest in <span style="color: #667eea; font-weight: 600;">"{{ project_name }}"</span>. After careful consideration, we have decided not to move with your bidding proposal.
+        </p>
+            
+             
+        {% if bid_amount %}
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 25px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px;">Your Bid Details:</h3>
+            <p style="margin: 5px 0; color: #666; font-size: 16px;"><strong>Bid Amount:</strong> ${{ bid_amount }}</p>
+            {% if time %}
+            <p style="margin: 5px 0; color: #666; font-size: 16px;"><strong>Timeline:</strong> {{ time }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+       
+        
+       
+        <!-- Footer -->
+        <div style="border-top: 1px solid #eee; padding-top: 25px; margin-top: 35px;">
+            <p style="font-size: 16px; line-height: 1.6; color: #555; margin: 0;">
+                Best regards,<br>
+                <span style="color: #4CAF50; font-weight: 600;">The Bidding Team</span> 
+            </p>
+        </div>
+        
+        
+        <p style="font-size: 13px; color: #888; margin: 20px 0 0 0; text-align: center;">
+            Questions? Reply to this email and we'll get back to you quickly!
+        </p>
+        
+    </div>
+    
+</body>
+</html>
