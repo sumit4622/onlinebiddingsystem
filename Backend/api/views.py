@@ -2,7 +2,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import itemsUpload
 from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -10,7 +9,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.decorators import api_view
 from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
+from .models import itemsUpload
 
 @api_view(['POST'])
 def userRegistration(request):
@@ -67,17 +68,22 @@ def approve_bid(request, id):
     item.is_approved = True
     item.save()
 
-    try:
-        send_mail(
-            subject="Your Bidding Request has been Approved",
-            message=f"Hello {item.user.first_name} {item.user.last_name},\n\n"
-                    f"Congratulations! Your bidding request for '{item.title}' has been approved.",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[item.user.email],
-            fail_silently=False
-        )
-    except Exception as e:
-        print("Error Sennding email", e)
+    context ={
+        "user_name" : f'{item.user.first_name} {item.user.last_name}',
+        "project_name": f'{item.title}',
+        "bid_amount": f"{item.minimum_bid}",
+        "time": f"{item.end_date}"
+    }
+
+    html_content = render_to_string("emails/bid_approved.html", context)
+    email = EmailMessage(
+        subject=" Your Bid has been Approved",
+        body=html_content,
+        from_email=settings.EMAIL_HOST_USER,
+        to=[item.user.email],
+    )
+    email.content_subtype = "html"  # tells Django to send as HTML
+    email.send()
     return Response({"message": f"Item {id} approved successfully"}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -87,14 +93,22 @@ def reject_bid(request, id):
     item.is_approved = False
     item.save()
     try:
-        send_mail(
-            subject="Your Bidding request has been Reject",
-            message=f"Hello {item.user.first_name} {item.user.last_name},"
-            f" Sorry! Your bidding request has been rejected for {item.title} has been reject ",
+        context ={
+        "user_name" : f'{item.user.first_name} {item.user.last_name}',
+        "project_name": f'{item.title}',
+        "bid_amount": f"{item.minimum_bid}",
+        "time": f"{item.end_date}"
+        }
+
+        html_content = render_to_string("emails/bid_rejected.html", context)
+        email = EmailMessage(
+            subject=" Your Bid has been Approved",
+            body=html_content,
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[item.user.email],
-            fail_silently=False
+            to=[item.user.email],
         )
+        email.content_subtype = "html"  # tells Django to send as HTML
+        email.send()
     except Exception as e:
         print("Error sending email", e)
     return Response({"message": f"Item {id} rejected successfully"}, status=status.HTTP_200_OK)
