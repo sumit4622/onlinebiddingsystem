@@ -1,17 +1,16 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer
+from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.decorators import api_view
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-
-from .models import itemsUpload
+from .models import itemsUpload, bid
 
 @api_view(['POST'])
 def userRegistration(request):
@@ -41,7 +40,7 @@ def adminLoginView(request):
                 'message': 'Admin login successful',
                 'access': str(refresh.access_token),
                 'refresh': str(refresh)
-            })
+            }) 
         else:
             return Response({"message": "Invalid credentials or not an admin"}, status=status.HTTP_401_UNAUTHORIZED)
     return Response(adminLoginData.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -50,7 +49,7 @@ def adminLoginView(request):
 def uploadItems(request):
     serializer = itemsUploadSerializers(data=request.data)
     if serializer.is_valid():
-        serializer.save(user=request.user)
+        serializer.save(user=request.user) 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     print("Upload validation error:", serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -82,7 +81,7 @@ def approve_bid(request, id):
         from_email=settings.EMAIL_HOST_USER,
         to=[item.user.email],
     )
-    email.content_subtype = "html"  # tells Django to send as HTML
+    email.content_subtype = "html"  
     email.send()
     return Response({"message": f"Item {id} approved successfully"}, status=status.HTTP_200_OK)
 
@@ -107,10 +106,44 @@ def reject_bid(request, id):
             from_email=settings.EMAIL_HOST_USER,
             to=[item.user.email],
         )
-        email.content_subtype = "html"  # tells Django to send as HTML
+        email.content_subtype = "html"  
         email.send()
     except Exception as e:
         print("Error sending email", e)
     return Response({"message": f"Item {id} rejected successfully"}, status=status.HTTP_200_OK)
 
 
+@api_view(['post'])
+@permission_classes([IsAuthenticated])
+def accept_bid(request):
+    item_id = request.data.get("title")
+    bid_amount = request.data.get("bid_amount")
+    
+    if not item_id or not bid_amount:
+        return Response(f"error: item and bid amount are rquired, ", status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        itemsUpload.objects.get(id = item_id)
+    except itemsUpload.DoesNotExist:
+        return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = bidSerializer(data={"bid_amount": bid_amount})
+    if serializer.is_valid():
+        serializer.save(user=request.user, item=itemsUpload)   
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+@permission_classes([AllowAny])   
+def item_bids(request, item_id):
+    bids = bid.objects.filter(item__id=item_id).order_by("-bid_amount")
+    serializer = bidSerializer(bids, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def my_bids(request):
+    bids = bid.objects.filter(user=request.user).order_by("-id")
+    serializer = bidSerializer(bids, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

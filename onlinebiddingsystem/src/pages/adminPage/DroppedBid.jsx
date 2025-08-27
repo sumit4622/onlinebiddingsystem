@@ -21,9 +21,9 @@ export default function DroppedBid() {
           minBid: parseFloat(item.minimum_bid),
           startDate: item.start_date,
           endDate: item.end_date,
-          submittedBy: `${item.user.first_name} ${item.user.last_name}`|| 'Unknown User',
+          submittedBy: `${item.user.first_name} ${item.user.last_name}` || 'Unknown User',
           submittedOn: item.created_at ? item.created_at.split('T')[0] : 'Unknown',
-          status: item.is_approved === true ? 'approved' : 'pending',
+          status: item.is_approved === null ? 'pending' : item.is_approved === true ? 'approved' : 'rejected',
           category: item.category || 'General',
         }));
         setBids(formatted);
@@ -46,7 +46,9 @@ export default function DroppedBid() {
       }
       setBids(prevBids =>
         prevBids.map(bid =>
-          bid.id === bidId ? { ...bid, status: action } : bid
+          bid.id === bidId
+            ? { ...bid, status: action === 'approved' ? 'approved' : 'rejected' }
+            : bid
         )
       );
       setMessageContent(`Bid ${bidId} has been ${action}.`);
