@@ -17,3 +17,8 @@ export const placeBid = async ({item, bid_amount}) =>{
     });
     return response.data;
 }
+
+export const fetch_latestbid = async ({itemId}) => {
+    const response = await api.get(`/api/items/${itemId}/latest-bid/`)
+    return response.data
+}

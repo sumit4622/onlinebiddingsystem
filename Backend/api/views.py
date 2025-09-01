@@ -148,14 +148,23 @@ def place_bid(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def Fetching_leatesBId(request, item_id):
+def fetch_latest_bid(request, item_id):
+    """
+    Fetch the latest bid amount for the authenticated user on a specific item.
+    Returns the user's latest bid or the item's minimum bid if no bid exists.
+    """
     try:
         item = itemsUpload.objects.get(id=item_id)
-    except:
-        return Response({"error": "Item not found"}, status= status.HTTP_404_NOT_FOUND)
-    latest_bid = bid.objects.filter(user=request.user, item=item).first()
+    except itemsUpload.DoesNotExist:
+        return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Get the latest bid by this user for this item
+    latest_bid = bid.objects.filter(user=request.user, item=item).order_by('-updated_at').first()
+
     if latest_bid:
         return Response({"latest_bid_amount": latest_bid.bid_amount}, status=status.HTTP_200_OK)
+    
+    # Return the minimum bid if the user has not placed a bid yet
     return Response({"latest_bid_amount": item.minimum_bid}, status=status.HTTP_200_OK)
 
 

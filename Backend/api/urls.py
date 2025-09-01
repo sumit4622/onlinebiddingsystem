@@ -10,4 +10,5 @@ urlpatterns = [
     path("items/<int:id>/approve/", views.approve_bid, name="approve_bid"),
     path("items/<int:id>/reject/", views.reject_bid, name="reject_bid"),
     path('items/acceptbid/', views.place_bid, name="accept_bid"),
-]
+    path('items/<int:item_id>/latest-bid/', views.fetch_latest_bid, name='fetch-latest-bid'),
+    ]

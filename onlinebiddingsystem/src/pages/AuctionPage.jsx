@@ -4,7 +4,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import HigestBid from "./landing component/PagesComponents/HigestBid";
 import TimeBoxes from "./Support/BoxTime";
-import { placeBid } from "../services/userServices";
+import { placeBid, fetch_latestbid } from "../services/userServices";
 import BidModel from "../landingPage/Components/BidModel";
 
 export default function AuctionPage() {
