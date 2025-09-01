@@ -25,9 +25,19 @@ class bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     item = models.ForeignKey(itemsUpload, on_delete=models.CASCADE, related_name="bids")
     bid_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now_add=True )
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'item')
 
     def __str__(self):
         return f"{self.user.username} bid RS {self.bid_amount} on {self.item.title}"
 
+class bidHistory(models.Model):
+    bid = models.ForeignKey(bid, on_delete=models.CASCADE, related_name="history")
+    old_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    changed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.bid.user.username} changed bid from RS {self.old_amount} on {self.bid.item.title}"

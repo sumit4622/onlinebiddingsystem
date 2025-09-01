@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib import admin
 from django.contrib.auth.models import User  
-from .models import itemsUpload ,bid
+from .models import itemsUpload ,bid, bidHistory
 
 
 class userRegisterSerializers(serializers.ModelSerializer):
@@ -42,3 +42,8 @@ class bidSerializer(serializers.ModelSerializer):
         model = bid 
         fields = ['id', 'user', 'item', 'bid_amount', 'create_at', 'updated_at']
         extra_kwargs = {'user': {'read_only': True}, 'item': {'read_only': True}}
+
+class bidHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = bidHistory
+        fields = ['id', 'bid', 'old_amount', 'changed_at']

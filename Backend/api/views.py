@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer
+from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
@@ -113,25 +113,51 @@ def reject_bid(request, id):
     return Response({"message": f"Item {id} rejected successfully"}, status=status.HTTP_200_OK)
 
 
-@api_view(['post'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def accept_bid(request):
-    item_id = request.data.get("title")
+def place_bid(request):
+    item_id = request.data.get("item")
     bid_amount = request.data.get("bid_amount")
-    
+
     if not item_id or not bid_amount:
-        return Response(f"error: item and bid amount are rquired, ", status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response({"error": "item and bid_amount are required"}, status=status.HTTP_400_BAD_REQUEST)
+
     try:
-        itemsUpload.objects.get(id = item_id)
+        item = itemsUpload.objects.get(id=item_id)
     except itemsUpload.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = bidSerializer(data={"bid_amount": bid_amount})
-    if serializer.is_valid():
-        serializer.save(user=request.user, item=itemsUpload)   
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Check if user already has a bid on this item
+    user_bid, created = bid.objects.get_or_create(
+        user=request.user,
+        item=item,
+        defaults={"bid_amount": bid_amount}
+    )
+
+    if not created:
+        # Save old bid to history
+        bidHistory.objects.create(
+            bid=user_bid,
+            old_amount=user_bid.bid_amount
+        )
+        # Update the current bid
+        user_bid.bid_amount = bid_amount
+        user_bid.save()
+
+    return Response(bidSerializer(user_bid).data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def Fetching_leatesBId(request, item_id):
+    try:
+        item = itemsUpload.objects.get(id=item_id)
+    except:
+        return Response({"error": "Item not found"}, status= status.HTTP_404_NOT_FOUND)
+    latest_bid = bid.objects.filter(user=request.user, item=item).first()
+    if latest_bid:
+        return Response({"latest_bid_amount": latest_bid.bid_amount}, status=status.HTTP_200_OK)
+    return Response({"latest_bid_amount": item.minimum_bid}, status=status.HTTP_200_OK)
+
 
 @api_view(["GET"])
 @permission_classes([AllowAny])   
