@@ -4,33 +4,60 @@ import { useParams, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import HigestBid from "./landing component/PagesComponents/HigestBid";
 import TimeBoxes from "./Support/BoxTime";
-import { placeBid, fetch_latestbid } from "../services/userServices";
+import { placeBid, fetch_latestbid, connectAuctionSocket } from "../services/userServices";
 import BidModel from "../landingPage/Components/BidModel";
 
 export default function AuctionPage() {
   const [value, setValue] = useState(null);
   const [showAuctionModal, setShowAuctionModal] = useState(false);
+  const [socket, setSocket] = useState(null);
   const { id } = useParams();
   const location = useLocation();
   const item = location.state?.item;
 
   const bidIncrement = 100;
 
-  
-  useEffect(() => {
-    const fetchLatestBid = async () => {
-      try {
-        const data = await fetch_latestbid(id);
-        setValue(data.latest_bid_amount);
-      } catch (error) {
-        console.log("Failed to fetch latest bid, defaulting to item minimum bid.");
-        setValue(0);
-      }
-    };
-    fetchLatestBid();
-  }, [id, item]);
+  // useEffect(() => {
+  //   const fetchLatestBid = async () => {
+  //     try {
+  //       const data = await fetch_latestbid({ itemId: id });
+  //       setValue(data.latest_bid_amount);
+  //     } catch (error) {
+  //       console.log("Failed to fetch latest bid, defaulting to item minimum bid.");
+  //       setValue(0);
+  //     }
+  //   };
+  //   fetchLatestBid();
+  // }, [id, item]);
 
- 
+  useEffect(() => {
+    const socket = connectAuctionSocket(id)
+    setSocket(socket)
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Received:", data);
+
+      if (data.type === "new_bid") {
+        setValue(data.bid_amount);
+      }
+
+
+      socket.onclose = (event) => {
+        console.log("WebSocket closed:", event);
+      };
+
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      return () => {
+        socket.close();
+      };
+    };
+  }, [id]);
+
+
   const handleInputChange = (event) => {
     const newValue = parseInt(event.target.value, 10);
     if (!isNaN(newValue)) {
@@ -38,16 +65,16 @@ export default function AuctionPage() {
     }
   };
 
-  
+
   const handleBidClick = () => {
     setValue(prev => prev + bidIncrement);
     setShowAuctionModal(true);
   };
 
-  
+
   const confirmBid = async () => {
     try {
-      await placeBid({ item: id, bid_amount: value });
+      // await placeBid({ item: id, bid_amount: value });
       setShowAuctionModal(false);
       alert(`Your bid of Rs.${value} has been placed!`);
     } catch (error) {
