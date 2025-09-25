@@ -25,4 +25,5 @@ export const fetch_latestbid = async ({itemId}) => {
 
 export const connectAuctionSocket =  (id) => {
     return new WebSocket(`ws://localhost:8001/ws/auction/${id}/`);
+
 }

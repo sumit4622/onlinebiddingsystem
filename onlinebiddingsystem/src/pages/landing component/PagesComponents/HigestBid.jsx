@@ -1,5 +1,3 @@
-
-
 export default function HigestBid() {
     return (
         <div>
@@ -10,8 +8,8 @@ export default function HigestBid() {
                     </h6>
                 </div>
                 <hr />
-                <div className="table-container mt-3"> {/* Optional container for margin or other general styling */}
-                    <table className="table  table-striped"> {/* Apply Bootstrap table classes here */}
+                <div className="table-container mt-3">
+                    <table className="table  table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Bidder</th>

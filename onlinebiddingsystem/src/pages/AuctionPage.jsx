@@ -17,45 +17,50 @@ export default function AuctionPage() {
 
   const bidIncrement = 100;
 
-  // useEffect(() => {
-  //   const fetchLatestBid = async () => {
-  //     try {
-  //       const data = await fetch_latestbid({ itemId: id });
-  //       setValue(data.latest_bid_amount);
-  //     } catch (error) {
-  //       console.log("Failed to fetch latest bid, defaulting to item minimum bid.");
-  //       setValue(0);
-  //     }
-  //   };
-  //   fetchLatestBid();
-  // }, [id, item]);
-
   useEffect(() => {
-    const socket = connectAuctionSocket(id)
-    setSocket(socket)
+    const fetchLatestBid = async () => {
+      try {
+        const data = await fetch_latestbid({ itemId: id });
+        setValue(data.latest_bid_amount);
+      } catch (error) {
+        console.log("Failed to fetch latest bid, defaulting to item minimum bid.");
+        setValue(0);
+      }
+    };
+    fetchLatestBid();
+  }, [id, item]);
 
-    socket.onmessage = (event) => {
+useEffect(() => {
+  const socket = connectAuctionSocket(id);
+
+  socket.onopen = () => {
+    console.log("WebSocket connected to auction:", id);
+    setSocket(socket);
+  };
+
+  socket.onmessage = (event) => {
+    try {
       const data = JSON.parse(event.data);
       console.log("Received:", data);
-
       if (data.type === "new_bid") {
         setValue(data.bid_amount);
       }
+    } catch (err) {
+      console.error("Error parsing WebSocket message:", err);
+    }
+  };
+
+  socket.onclose = (event) => {
+    console.warn("WebSocket closed:", event);
+  };
+
+  socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
+
+},[id])
 
 
-      socket.onclose = (event) => {
-        console.log("WebSocket closed:", event);
-      };
-
-      socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
-
-      return () => {
-        socket.close();
-      };
-    };
-  }, [id]);
 
 
   const handleInputChange = (event) => {
@@ -72,16 +77,21 @@ export default function AuctionPage() {
   };
 
 
-  const confirmBid = async () => {
-    try {
-      // await placeBid({ item: id, bid_amount: value });
-      setShowAuctionModal(false);
-      alert(`Your bid of Rs.${value} has been placed!`);
-    } catch (error) {
-      console.error("Error placing bid:", error);
-      alert("Failed to place bid. Please try again.");
-    }
-  };
+const confirmBid = async () => {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    const bidData = {
+      type: "place_bid",
+      itemId: id,
+      bid_amount: value,
+      user: "Guest",   
+    };
+    socket.send(JSON.stringify(bidData));
+    setShowAuctionModal(false);
+    alert(`your bid amount is ${value} is placed`);
+  } else {
+    alert(`bid is not placed.`);
+  }
+};
 
   return (
     <>
