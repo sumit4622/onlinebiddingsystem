@@ -146,25 +146,26 @@ def place_bid(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def fetch_latest_bid(request, item_id):
-    """
-    Fetch the latest bid amount for the authenticated user on a specific item.
-    Returns the user's latest bid or the item's minimum bid if no bid exists.
-    """
     try:
         item = itemsUpload.objects.get(id=item_id)
-        # email = itemsUpload.objects.get(email= item_email)
     except itemsUpload.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # Get the latest bid by this user for this item
-    latest_bid = bid.objects.filter(user=request.user, item=item).order_by('-updated_at').first()
+    # latest bid across all users
+    latest_bid = bid.objects.filter(item=item).order_by('-updated_at').first()
 
     if latest_bid:
         return Response({"latest_bid_amount": latest_bid.bid_amount}, status=status.HTTP_200_OK)
+    else:
+        return Response({"latest_bid_amount": item.minimum_bid}, status=status.HTTP_200_OK)
+
     
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+def getBiditemItem(request, item_id):
+    bids = bid.objects.filter(item_id = item_id).order_by('-create_at')
+    Serializer = bidSerializer(bids, many=True)
+    return Response(Serializer.data)
 
 
 @api_view(["GET"])

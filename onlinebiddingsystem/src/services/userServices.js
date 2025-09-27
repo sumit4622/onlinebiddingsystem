@@ -27,3 +27,8 @@ export const connectAuctionSocket =  (id) => {
     return new WebSocket(`ws://localhost:8001/ws/auction/${id}/`);
 
 }
+
+export const getBiditemItem = async(itemId) =>{
+    const response = await api.get(`/api/items/${itemId}/bids/`)
+    return response.data
+}

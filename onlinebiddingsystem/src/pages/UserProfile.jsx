@@ -6,9 +6,10 @@ import { userCerndincial } from "../services/userServices"
 import { useEffect, useState } from "react";
 
 export default function UserProfile() {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
 
   useEffect(() => {
     const userDeatils = async () => {

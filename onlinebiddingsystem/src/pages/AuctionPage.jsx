@@ -4,11 +4,12 @@ import { useParams, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import HigestBid from "./landing component/PagesComponents/HigestBid";
 import TimeBoxes from "./Support/BoxTime";
-import { placeBid, fetch_latestbid, connectAuctionSocket } from "../services/userServices";
+import { placeBid, fetch_latestbid, connectAuctionSocket, userCerndincial } from "../services/userServices";
 import BidModel from "../landingPage/Components/BidModel";
 
 export default function AuctionPage() {
   const [value, setValue] = useState(null);
+  const [userData, setUserData] = useState('');
   const [showAuctionModal, setShowAuctionModal] = useState(false);
   const [socket, setSocket] = useState(null);
   const { id } = useParams();
@@ -18,47 +19,68 @@ export default function AuctionPage() {
   const bidIncrement = 100;
 
   useEffect(() => {
+    const userDeatils = async () => {
+      try {
+        const data = await userCerndincial();
+        setUserData(data);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          alert('Error:', error.message);
+        }
+        console.error("Error fetching data:", error);
+      }
+    };
+    userDeatils();
+  },[])
+
+  useEffect(() => {
     const fetchLatestBid = async () => {
       try {
         const data = await fetch_latestbid({ itemId: id });
         setValue(data.latest_bid_amount);
       } catch (error) {
-        console.log("Failed to fetch latest bid, defaulting to item minimum bid.");
+        console.log(`${error}: failed to fetach Bid.`);
         setValue(0);
       }
     };
     fetchLatestBid();
   }, [id, item]);
 
-useEffect(() => {
-  const socket = connectAuctionSocket(id);
+  useEffect(() => {
+    const socket = connectAuctionSocket(id);
 
-  socket.onopen = () => {
-    console.log("WebSocket connected to auction:", id);
-    setSocket(socket);
-  };
+    socket.onopen = () => {
+      console.log("WebSocket connected to auction:", id);
+      setSocket(socket);
+    };
 
-  socket.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      console.log("Received:", data);
-      if (data.type === "new_bid") {
-        setValue(data.bid_amount);
+    socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Received:", data);
+        if (data.type === "new_bid") {
+          setValue(data.bid_amount);
+        }
+      } catch (err) {
+        console.error("Error parsing WebSocket message:", err);
       }
-    } catch (err) {
-      console.error("Error parsing WebSocket message:", err);
-    }
-  };
+    };
 
-  socket.onclose = (event) => {
-    console.warn("WebSocket closed:", event);
-  };
+    socket.onclose = (event) => {
+      console.warn("WebSocket closed:", event);
+    };
 
-  socket.onerror = (error) => {
-    console.error("WebSocket error:", error);
-  };
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
 
-},[id])
+  }, [id])
 
 
 
@@ -77,21 +99,21 @@ useEffect(() => {
   };
 
 
-const confirmBid = async () => {
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    const bidData = {
-      type: "place_bid",
-      itemId: id,
-      bid_amount: value,
-      user: "Guest",   
-    };
-    socket.send(JSON.stringify(bidData));
-    setShowAuctionModal(false);
-    alert(`your bid amount is ${value} is placed`);
-  } else {
-    alert(`bid is not placed.`);
-  }
-};
+  const confirmBid = async () => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const bidData = {
+        type: "place_bid",
+        itemId: id,
+        bid_amount: value,
+        user: `${userData.first_name}`,
+      };
+      socket.send(JSON.stringify(bidData));
+      setShowAuctionModal(false);
+      alert(`your bid amount is ${value} is placed`);
+    } else {
+      alert(`bid is not placed.`);
+    }
+  };
 
   return (
     <>
@@ -154,7 +176,7 @@ const confirmBid = async () => {
         </div>
       </div>
 
-      <HigestBid />
+      <HigestBid itemId={id}/>
 
       <BidModel
         show={showAuctionModal}
