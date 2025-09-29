@@ -55,7 +55,7 @@ class AuctionConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_bid(self, item_id, bid_amount, username):
         """
-        Save or update bid in database
+        Save or update bid in database, with ownership and admin check
         """
         try:
             item = itemsUpload.objects.get(id=item_id)
@@ -63,6 +63,15 @@ class AuctionConsumer(AsyncWebsocketConsumer):
             # get or create user
             user, _ = User.objects.get_or_create(username=username)
 
+            # 1️⃣ Prevent owner from bidding
+            if user.id == item.owner.id:
+                raise ValueError("You cannot bid on your own item")
+
+            # 2️⃣ Prevent bidding if admin approved
+            if item.admin_approved:
+                raise ValueError("Bidding is closed for this item")
+
+            # 3️⃣ Save or update bid
             user_bid, created = bid.objects.get_or_create(
                 user=user,
                 item=item,
@@ -85,3 +94,7 @@ class AuctionConsumer(AsyncWebsocketConsumer):
 
         except itemsUpload.DoesNotExist:
             return {"bid_amount": bid_amount, "user": username}
+
+        except ValueError as e:
+            # Return error message so frontend can show alert
+            return {"error": str(e), "bid_amount": bid_amount, "user": user.username}

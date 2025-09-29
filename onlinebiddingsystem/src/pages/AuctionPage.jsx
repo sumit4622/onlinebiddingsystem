@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import HigestBid from "./landing component/PagesComponents/HigestBid";
+import PopMessage from "../landingPage/Components/Popup";
 import TimeBoxes from "./Support/BoxTime";
 import { placeBid, fetch_latestbid, connectAuctionSocket, userCerndincial } from "../services/userServices";
 import BidModel from "../landingPage/Components/BidModel";
@@ -12,9 +13,15 @@ export default function AuctionPage() {
   const [userData, setUserData] = useState('');
   const [showAuctionModal, setShowAuctionModal] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [auctionEnded, setAuctionEnded] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
+
   const { id } = useParams();
   const location = useLocation();
   const item = location.state?.item;
+
+
 
   const bidIncrement = 100;
 
@@ -37,7 +44,13 @@ export default function AuctionPage() {
       }
     };
     userDeatils();
-  },[])
+  }, [])
+
+  useEffect(() => {
+    if (userData && item) {
+      setIsOwner(userData.id === item.user.id);
+    }
+  }, [userData, item]);
 
   useEffect(() => {
     const fetchLatestBid = async () => {
@@ -56,7 +69,7 @@ export default function AuctionPage() {
     const socket = connectAuctionSocket(id);
 
     socket.onopen = () => {
-      console.log("WebSocket connected to auction:", id);
+      // console.log("WebSocket connected to auction:", id);
       setSocket(socket);
     };
 
@@ -66,6 +79,8 @@ export default function AuctionPage() {
         console.log("Received:", data);
         if (data.type === "new_bid") {
           setValue(data.bid_amount);
+        } else if (data.type === "error") {
+          alert(data.message)
         }
       } catch (err) {
         console.error("Error parsing WebSocket message:", err);
@@ -81,6 +96,35 @@ export default function AuctionPage() {
     };
 
   }, [id])
+
+  useEffect(() => {
+    const checkAuctionEnd = () => {
+      const now = new Date();
+      const endDate = new Date(item.end_date);
+
+      if (now >= endDate && !auctionEnded) {
+        setAuctionEnded(true);
+
+
+        fetch_latestbid({ itemId: id })
+          .then(data => {
+            if (data.latest_bid_amount > 0) {
+              console.log(data)
+              setWinner(data.winner.first_name);
+            } else {
+              setWinner("No one");
+            }
+          })
+          .catch(err => console.error("Failed to fetch winner:", err));
+      }
+    };
+
+    checkAuctionEnd();
+    const interval = setInterval(checkAuctionEnd, 10000);
+
+    return () => clearInterval(interval);
+  }, [id, auctionEnded]);
+
 
 
 
@@ -109,7 +153,7 @@ export default function AuctionPage() {
       };
       socket.send(JSON.stringify(bidData));
       setShowAuctionModal(false);
-      alert(`your bid amount is ${value} is placed`);
+      // alert(`your bid amount is ${value} is placed`);
     } else {
       alert(`bid is not placed.`);
     }
@@ -165,18 +209,24 @@ export default function AuctionPage() {
                 id="quantity"
                 value={value || ""}
                 onChange={handleInputChange}
+                disabled={auctionEnded}
               />
             </div>
             <div className="button-container">
-              <Button variant="dark" onClick={handleBidClick}>
-                Bid +{bidIncrement}
+              <Button
+                variant="dark"
+                onClick={handleBidClick}
+                disabled={auctionEnded || isOwner}
+              >
+                {auctionEnded ? "Auction Ended" : `Bid +${bidIncrement}`}
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <HigestBid itemId={id}/>
+      <HigestBid itemId={id} />
+      <PopMessage isAuctionEnded={auctionEnded} />
 
       <BidModel
         show={showAuctionModal}

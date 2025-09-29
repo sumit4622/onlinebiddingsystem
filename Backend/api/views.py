@@ -113,6 +113,13 @@ def reject_bid(request, id):
     return Response({"message": f"Item {id} rejected successfully"}, status=status.HTTP_200_OK)
 
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from .models import itemsUpload, bid, bidHistory
+from .serializers import bidSerializer
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def place_bid(request):
@@ -127,6 +134,15 @@ def place_bid(request):
     except itemsUpload.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
+    # Prevent owner from bidding
+    if request.user.id == item.owner.id:
+        return Response({"error": "You cannot bid on your own item"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Prevent bidding if admin has approved (lock bidding)
+    if item.admin_approved:  
+        return Response({"error": "Bidding is closed for this item"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Create or update bid
     user_bid, created = bid.objects.get_or_create(
         user=request.user,
         item=item,
@@ -143,6 +159,7 @@ def place_bid(request):
 
     return Response(bidSerializer(user_bid).data, status=status.HTTP_201_CREATED)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def fetch_latest_bid(request, item_id):
@@ -151,13 +168,13 @@ def fetch_latest_bid(request, item_id):
     except itemsUpload.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # latest bid across all users
+    
     latest_bid = bid.objects.filter(item=item).order_by('-updated_at').first()
 
     if latest_bid:
         return Response({"latest_bid_amount": latest_bid.bid_amount}, status=status.HTTP_200_OK)
     else:
-        return Response({"latest_bid_amount": item.minimum_bid}, status=status.HTTP_200_OK)
+        return Response({"latest_bid_amount": 0}, status=status.HTTP_200_OK)
 
     
 
