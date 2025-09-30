@@ -7,6 +7,7 @@ import PopMessage from "../landingPage/Components/Popup";
 import TimeBoxes from "./Support/BoxTime";
 import { placeBid, fetch_latestbid, connectAuctionSocket, userCerndincial } from "../services/userServices";
 import BidModel from "../landingPage/Components/BidModel";
+import Feedback from "../landingPage/Components/Feedback";
 
 export default function AuctionPage() {
   const [value, setValue] = useState(null);
@@ -229,6 +230,7 @@ export default function AuctionPage() {
 
       <HigestBid itemId={id} />
       <PopMessage isAuctionEnded={auctionEnded} />
+      <Feedback />
 
       <BidModel
         show={showAuctionModal}
