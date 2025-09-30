@@ -69,7 +69,7 @@ export default function AuctionPage() {
     const socket = connectAuctionSocket(id);
 
     socket.onopen = () => {
-      // console.log("WebSocket connected to auction:", id);
+      console.log("WebSocket connected to auction:", id);
       setSocket(socket);
     };
 
@@ -152,6 +152,8 @@ export default function AuctionPage() {
         user: `${userData.first_name}`,
       };
       socket.send(JSON.stringify(bidData));
+      console.log("Sending bid:", bidData);
+
       setShowAuctionModal(false);
       // alert(`your bid amount is ${value} is placed`);
     } else {
