@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { ThumbsUp, X } from 'lucide-react';
+import { feedback } from '../../services/userServices';
 import '../../styles/Landing/button/feedback.css'
 
-export default function FeedbackButton() {
+export default function FeedbackButton({itemId}) {
     const [isOpen, setIsOpen] = useState(false);
     const [showThankYou, setShowThankYou] = useState(false);
     const [formData, setFormData] = useState({
@@ -19,137 +20,140 @@ export default function FeedbackButton() {
         }));
     };
 
-    const handleFeedback = (e) => {
+    const handleFeedback = async (e) => {
         e.preventDefault();
+        try {
+            await feedback(itemId, formData);
+            setShowThankYou(true);
 
-        // Here you can send data to your backend
-        console.log('Feedback submitted:', formData);
+            setTimeout(() => {
+                setIsOpen(false);
+                setShowThankYou(false);
+                setFormData({ name: '', likes: '', dislikes: '' });
+            }, 3000);
+        } catch (error) {
+            console.log(`error while sending feedback`, error)
+        
 
-        setShowThankYou(true);
+    }
 
-        // Auto-close after 3 seconds
-        setTimeout(() => {
-            setIsOpen(false);
-            setShowThankYou(false);
-            setFormData({ name: '', likes: '', dislikes: '' });
-        }, 3000);
-    };
+    console.log('Feedback submitted:', formData);
 
-    const toggleWidget = () => {
-        setIsOpen(!isOpen);
-        if (isOpen) {
-            setShowThankYou(false);
-        }
-    };
 
-    return (
-        <>
-            {isOpen && (
-                <div className="feedback-widget">
-                    {/* Close Button */}
-                    <button onClick={toggleWidget} className="close-btn">
-                        <X size={20} />
-                    </button>
 
-                    {!showThankYou ? (
+
+};
+
+const toggleWidget = () => {
+    setIsOpen(!isOpen);
+    if (isOpen) {
+        setShowThankYou(false);
+    }
+};
+
+return (
+    <>
+        {isOpen && (
+            <div className="feedback-widget">
+                <button onClick={toggleWidget} className="close-btn">
+                    <X size={20} />
+                </button>
+
+                {!showThankYou ? (
+                    <div>
+                        <h3 className="h5 fw-semibold text-dark mb-2">
+                            Share Your Feedback
+                        </h3>
+                        <p className="text-muted small mb-4">
+                            We'd love to hear your thoughts
+                        </p>
+
                         <div>
-                            <h3 className="h5 fw-semibold text-dark mb-2">
-                                Share Your Feedback
-                            </h3>
-                            <p className="text-muted small mb-4">
-                                We'd love to hear your thoughts
-                            </p>
-
-                            <div>
-                                {/* Name Input */}
-                                <div className="mb-3">
-                                    <label className="form-label small fw-medium">
-                                        Your Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleInputChange}
-                                        className="form-control"
-                                        placeholder="Enter your name"
-                                        required
-                                    />
-                                </div>
-
-                                {/* What You Like */}
-                                <div className="mb-3">
-                                    <label className="form-label small fw-medium">
-                                        What do you like?
-                                    </label>
-                                    <textarea
-                                        name="likes"
-                                        value={formData.likes}
-                                        onChange={handleInputChange}
-                                        className="form-control"
-                                        placeholder="Tell us what you enjoyed..."
-                                        rows="3"
-                                    />
-                                </div>
-
-                                {/* What You Dislike */}
-                                <div className="mb-3">
-                                    <label className="form-label small fw-medium">
-                                        What could be improved?
-                                    </label>
-                                    <textarea
-                                        name="dislikes"
-                                        value={formData.dislikes}
-                                        onChange={handleInputChange}
-                                        className="form-control"
-                                        placeholder="Tell us what could be better..."
-                                        rows="3"
-                                    />
-                                </div>
-
-                                {/* Submit Button */}
-                                <button
-                                    type="button"
-                                    onClick={handleFeedback}
-                                    className="btn btn-primary w-100"
-                                >
-                                    Submit Feedback
-                                </button>
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium">
+                                    Your Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    placeholder="Enter your name"
+                                    required
+                                />
                             </div>
-                        </div>
-                    ) : (
-                        <div className="text-center py-4">
-                            <div className="thank-you-icon">
-                                <ThumbsUp size={32} className="text-success" />
-                            </div>
-                            <h3 className="h5 fw-semibold text-dark mb-2">
-                                Thank You!
-                            </h3>
-                            <p className="text-muted small">
-                                We appreciate your valuable feedback
-                            </p>
-                        </div>
-                    )}
-                </div>
-            )}
 
-            {/* Floating Action Button */}
-            <button onClick={toggleWidget} className="feedback-button">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-                <span className="fw-medium small">Feedback</span>
-            </button>
-        </>
-    );
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium">
+                                    What do you like?
+                                </label>
+                                <textarea
+                                    name="likes"
+                                    value={formData.likes}
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    placeholder="Tell us what you enjoyed..."
+                                    rows="3"
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium">
+                                    What could be improved?
+                                </label>
+                                <textarea
+                                    name="dislikes"
+                                    value={formData.dislikes}
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    placeholder="Tell us what could be better..."
+                                    rows="3"
+                                />
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleFeedback}
+                                className="btn btn-primary w-100"
+                            >
+                                Submit Feedback
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="text-center py-4">
+                        <div className="thank-you-icon">
+                            <ThumbsUp size={32} className="text-success" />
+                        </div>
+                        <h3 className="h5 fw-semibold text-dark mb-2">
+                            Thank You!
+                        </h3>
+                        <p className="text-muted small">
+                            We appreciate your valuable feedback
+                        </p>
+                    </div>
+                )}
+            </div>
+        )}
+
+        {/* Floating Action Button */}
+        <button onClick={toggleWidget} className="feedback-button">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <span className="fw-medium small">Feedback</span>
+        </button>
+    </>
+);
 }

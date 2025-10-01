@@ -230,7 +230,7 @@ export default function AuctionPage() {
 
       <HigestBid itemId={id} />
       <PopMessage isAuctionEnded={auctionEnded} />
-      <Feedback />
+      <Feedback itemId={id} />
 
       <BidModel
         show={showAuctionModal}

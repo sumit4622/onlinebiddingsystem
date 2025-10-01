@@ -32,3 +32,7 @@ export const getBiditemItem = async(itemId) =>{
     const response = await api.get(`/api/items/${itemId}/bids/`)
     return response.data
 }
+
+export const feedback = async(itemId) =>{
+    return  await api.post(`/api/feedback/${itemId}/sendfeedback/`, data)
+}

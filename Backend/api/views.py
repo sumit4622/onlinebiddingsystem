@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory
+from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory, FeedbackSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
@@ -194,3 +194,15 @@ def my_bids(request):
     bids = bid.objects.filter(user=request.user).order_by("-id")
     serializer = bidSerializer(bids, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["post"])
+@permission_classes([IsAuthenticated])
+def feedback(request, item_id ):
+    serializer = FeedbackSerializer( data=request.data,
+        context={"request": request, "item_id": item_id})
+    if serializer.is_valid():
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    print("upload validation error:", serializer.errors)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
