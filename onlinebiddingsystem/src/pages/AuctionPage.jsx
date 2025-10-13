@@ -107,16 +107,16 @@ export default function AuctionPage() {
         setAuctionEnded(true);
 
 
-        fetch_latestbid({ itemId: id })
-          .then(data => {
-            if (data.latest_bid_amount > 0) {
-              console.log(data)
-              setWinner(data.winner.first_name);
-            } else {
-              setWinner("No one");
-            }
-          })
-          .catch(err => console.error("Failed to fetch winner:", err));
+        // fetch_latestbid({ itemId: id })
+        //   .then(data => {
+        //     if (data.latest_bid_amount > 0) {
+        //       console.log(data)
+        //       setWinner(data.winner.first_name);
+        //     } else {
+        //       setWinner("No one");
+        //     }
+        //   })
+          // .catch(err => console.error("Failed to fetch winner:", err));
       }
     };
 

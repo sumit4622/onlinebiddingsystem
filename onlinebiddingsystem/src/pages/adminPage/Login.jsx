@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/adminCSS/Login.css';
 import adminapi from '../../adminapi';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../adminConstants';
 
 export default function Login() {
   const [formValues, setFormValues] = useState({
@@ -23,9 +24,16 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await adminapi.post("/api/admin-login/", formValues);
-      alert("login successful", response.data);
+      const response = await adminapi.post("/admin-login/", formValues);
+
+      console.log("Response data:", response.data.access);
+
+      localStorage.setItem(ACCESS_TOKEN, response.data.access);
+      localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
+
+      alert("Login successful!");
       navigate('/admin/admin-layout/dropped-bid');
+
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);
@@ -41,6 +49,7 @@ export default function Login() {
 
 
   };
+
 
   return (
     <div className="login-wrapper">

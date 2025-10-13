@@ -28,7 +28,7 @@ export default function FeedbackButton({itemId}) {
 
             setTimeout(() => {
                 setIsOpen(false);
-                setShowThankYou(false);
+                setShowThankYou(true);
                 setFormData({ name: '', likes: '', dislikes: '' });
             }, 3000);
         } catch (error) {
@@ -36,11 +36,6 @@ export default function FeedbackButton({itemId}) {
         
 
     }
-
-    console.log('Feedback submitted:', formData);
-
-
-
 
 };
 
@@ -56,7 +51,7 @@ return (
         {isOpen && (
             <div className="feedback-widget">
                 <button onClick={toggleWidget} className="close-btn">
-                    <X size={20} />
+                    <X size={30} />
                 </button>
 
                 {!showThankYou ? (

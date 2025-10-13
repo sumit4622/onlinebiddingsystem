@@ -2,16 +2,15 @@ import axios from 'axios';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './adminConstants';
 
 const adminapi = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'http://localhost:8000/api/',
 });
 
 adminapi.interceptors.request.use((config) => {
-  // Skip Authorization header for login and token refresh endpoints
   if (config.url === '/api/admin-login/' || config.url === '/api/token/refresh/') {
     return config;
   }
   
-  const token = localStorage.getItem('adminAccessToken');
+  const token = localStorage.getItem(ACCESS_TOKEN);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

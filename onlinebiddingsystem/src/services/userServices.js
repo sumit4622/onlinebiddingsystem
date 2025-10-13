@@ -33,6 +33,6 @@ export const getBiditemItem = async(itemId) =>{
     return response.data
 }
 
-export const feedback = async(itemId) =>{
+export const feedback = async(itemId, data) =>{
     return  await api.post(`/api/feedback/${itemId}/sendfeedback/`, data)
 }
