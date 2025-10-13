@@ -129,15 +129,12 @@ def place_bid(request):
     except itemsUpload.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # Prevent owner from bidding
     if request.user.id == item.owner.id:
         return Response({"error": "You cannot bid on your own item"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Prevent bidding if admin has approved (lock bidding)
     if item.admin_approved:  
         return Response({"error": "Bidding is closed for this item"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Create or update bid
     user_bid, created = bid.objects.get_or_create(
         user=request.user,
         item=item,
@@ -202,7 +199,16 @@ def feedback(request, item_id ):
     serializer = FeedbackSerializer( data=request.data,
         context={"request": request, "item_id": item_id})
     if serializer.is_valid():
-        serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     print("upload validation error:", serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def deleteAuction(request, id):
+    try:
+        item = itemsUpload.objects.get(id=id)
+        item.delete()
+        return Response({"message": "item delete."}, status=status.HTTP_200_OK)
+    except:
+        return Response({"error": "there is no item like this."}, status=status.HTTP_404_NOT_FOUND)

@@ -50,21 +50,20 @@ class bidHistorySerializer(serializers.ModelSerializer):
 
 class FeedbackSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source="user.username", read_only=True)
-    item_title = serializers.CharField(source="item.title", read_only=True)  # optional display
+    item_title = serializers.CharField(source="item.title", read_only=True)  
 
     class Meta:
         model = FeedBack
         fields = [
             "id",
-            "user_name",      # ✅ show username
-            "item_title",     # ✅ show item title
-            "item",           # ✅ still keep foreign key if needed
+            "user_name",      
+            "item_title",     
             "name",
             "likes",
             "dislikes",
             "created_at",
         ]
-        read_only_fields = ["id", "user_name", "item_title", "created_at", "item", "user"]
+        read_only_fields = ["id", "user_name", "item_title", "created_at",]
 
     def create(self, validated_data):
         user = self.context["request"].user
