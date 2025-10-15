@@ -4,7 +4,7 @@ import Header from './landing component/Header';
 import LogoutModal from "./login/LogoutModal";
 import SureModal from '../landingPage/Components/SureModal';
 import { useNavigate } from 'react-router-dom';
-import api from "../api";
+import { fetchApprovedBid } from '../services/userServices';
 import TimeCompact from './Support/compactTime';
 
 export default function Dashboard() {
@@ -20,13 +20,23 @@ export default function Dashboard() {
 
   const fetchApprovedBids = async () => {
     try {
-      const res = await api.get("/api/items/");
-      const approved = res.data.filter(item => item.is_approved);
+      const response = await fetchApprovedBid();
+      const approved = response.filter(item => item.is_approved);
       setApprovedBids(approved);
-    } catch (err) {
-      console.error("Failed to fetch approved bids", err);
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log("error:", error.message);
+        alert('Error:', error.message);
+      }
+      console.error("Error fetching data:", error);
     }
-  };
+  }
 
   const handleSortChange = (event) => {
     setSortBy(event.target.value);
@@ -61,7 +71,7 @@ export default function Dashboard() {
   return (
     <>
       <LogoutModal />
-      <Header /> 
+      <Header />
 
       <div className='py-5' style={{ backgroundColor: '#004663' }}>
         <div className="container">
