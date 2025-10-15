@@ -82,7 +82,7 @@ export default function DroppedBid() {
 
   return (
     <div className="p-0">
-      <h1 className="text-white fw-bold p-3" style={{ backgroundColor: "#004663" }}>
+      <h1 className="text-white fw-bold p-4" style={{ backgroundColor: "#004663" }}>
         Dropped Bid
       </h1>
 

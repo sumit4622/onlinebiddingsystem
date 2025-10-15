@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory, FeedbackSerializer
+from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory, FeedbackSerializer, FeedBack
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
@@ -199,9 +199,17 @@ def feedback(request, item_id ):
     serializer = FeedbackSerializer( data=request.data,
         context={"request": request, "item_id": item_id})
     if serializer.is_valid():
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     print("upload validation error:", serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def view_all_feedback(request):
+    feedbacks = FeedBack.objects.select_related("user", "item").order_by("-created_at")
+    serializer = FeedbackSerializer(feedbacks, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
@@ -212,3 +220,4 @@ def deleteAuction(request, id):
         return Response({"message": "item delete."}, status=status.HTTP_200_OK)
     except:
         return Response({"error": "there is no item like this."}, status=status.HTTP_404_NOT_FOUND)
+    
