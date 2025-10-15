@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory
+from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory, FeedbackSerializer, FeedBack
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
@@ -113,6 +113,8 @@ def reject_bid(request, id):
     return Response({"message": f"Item {id} rejected successfully"}, status=status.HTTP_200_OK)
 
 
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def place_bid(request):
@@ -127,7 +129,12 @@ def place_bid(request):
     except itemsUpload.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # Check if user already has a bid on this item
+    if request.user.id == item.owner.id:
+        return Response({"error": "You cannot bid on your own item"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if item.admin_approved:  
+        return Response({"error": "Bidding is closed for this item"}, status=status.HTTP_400_BAD_REQUEST)
+
     user_bid, created = bid.objects.get_or_create(
         user=request.user,
         item=item,
@@ -135,37 +142,39 @@ def place_bid(request):
     )
 
     if not created:
-        # Save old bid to history
         bidHistory.objects.create(
             bid=user_bid,
             old_amount=user_bid.bid_amount
         )
-        # Update the current bid
         user_bid.bid_amount = bid_amount
         user_bid.save()
 
     return Response(bidSerializer(user_bid).data, status=status.HTTP_201_CREATED)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def fetch_latest_bid(request, item_id):
-    """
-    Fetch the latest bid amount for the authenticated user on a specific item.
-    Returns the user's latest bid or the item's minimum bid if no bid exists.
-    """
     try:
         item = itemsUpload.objects.get(id=item_id)
     except itemsUpload.DoesNotExist:
         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # Get the latest bid by this user for this item
-    latest_bid = bid.objects.filter(user=request.user, item=item).order_by('-updated_at').first()
+    
+    latest_bid = bid.objects.filter(item=item).order_by('-updated_at').first()
 
     if latest_bid:
         return Response({"latest_bid_amount": latest_bid.bid_amount}, status=status.HTTP_200_OK)
+    else:
+        return Response({"latest_bid_amount": 0}, status=status.HTTP_200_OK)
+
     
-    # Return the minimum bid if the user has not placed a bid yet
-    return Response({"latest_bid_amount": item.minimum_bid}, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def getBiditemItem(request, item_id):
+    bids = bid.objects.filter(item_id = item_id).order_by('-create_at')
+    Serializer = bidSerializer(bids, many=True)
+    return Response(Serializer.data)
 
 
 @api_view(["GET"])
@@ -182,3 +191,33 @@ def my_bids(request):
     bids = bid.objects.filter(user=request.user).order_by("-id")
     serializer = bidSerializer(bids, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["post"])
+@permission_classes([IsAuthenticated])
+def feedback(request, item_id ):
+    serializer = FeedbackSerializer( data=request.data,
+        context={"request": request, "item_id": item_id})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    print("upload validation error:", serializer.errors)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def view_all_feedback(request):
+    feedbacks = FeedBack.objects.select_related("user", "item").order_by("-created_at")
+    serializer = FeedbackSerializer(feedbacks, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def deleteAuction(request, id):
+    try:
+        item = itemsUpload.objects.get(id=id)
+        item.delete()
+        return Response({"message": "item delete."}, status=status.HTTP_200_OK)
+    except:
+        return Response({"error": "there is no item like this."}, status=status.HTTP_404_NOT_FOUND)
+    

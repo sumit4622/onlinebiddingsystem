@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib import admin
 from django.contrib.auth.models import User  
-from .models import itemsUpload ,bid, bidHistory
+from .models import itemsUpload ,bid, bidHistory, FeedBack
 
 
 class userRegisterSerializers(serializers.ModelSerializer):
@@ -47,3 +47,35 @@ class bidHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = bidHistory
         fields = ['id', 'bid', 'old_amount', 'changed_at']
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source="user.username", read_only=True)
+    item_title = serializers.CharField(source="item.title", read_only=True)  
+
+    class Meta:
+        model = FeedBack
+        fields = [
+            "id",
+            "user_name",      
+            "item_title",     
+            "name",
+            "likes",
+            "dislikes",
+            "created_at",
+        ]
+        read_only_fields = ["id", "user_name", "item_title", "created_at",]
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        item_id = self.context.get("item_id")
+
+        from .models import itemsUpload
+        item = itemsUpload.objects.get(id=item_id)
+
+        feedback = FeedBack.objects.create(
+            user=user,
+            item=item,
+            **validated_data
+        )
+        return feedback
+

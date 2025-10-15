@@ -1,45 +1,35 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/adminCSS/Login.css';
 import adminapi from '../../adminapi';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../adminConstants';
 
 export default function Login() {
-  const [formValues, setFormValues] = useState({
-    username: '',
-    password: '',
-  });
-
+  const [formValues, setFormValues] = useState({ username: '', password: '' });
   const navigate = useNavigate();
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
+  const handleChange = (e) => {
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await adminapi.post("/api/admin-login/", formValues);
-      alert("login successful", response.data);
-      navigate('/admin/admin-layout/dropped-bid');
+      const response = await adminapi.post("admin-login/", formValues);
+
+      const { access, refresh } = response.data;
+      if (!access) throw new Error("No access token returned");
+
+      // Save tokens
+      localStorage.setItem(ACCESS_TOKEN, access);
+      localStorage.setItem(REFRESH_TOKEN, refresh);
+
+      alert("Login successful!");
+      navigate("/admin/admin-layout/dropped-bid");
     } catch (error) {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        alert('Error:', error.message);
-      }
-      console.log(error.config);
+      console.error(error);
+      alert("Login failed. Check credentials and try again.");
     }
-
-
   };
 
   return (
