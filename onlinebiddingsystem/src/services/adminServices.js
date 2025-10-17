@@ -14,17 +14,51 @@ export const rejectBid = async (id) => {
 }
 
 export const deleteBid = async(bidId) => {
-    const response = await adminapi.delete(`items/${bidId}/`)
-    return response.data
-}
-
-export const  fetchFeedback = async() =>{
     try {
-        const response = await adminapi.get(`feedbacks/`)
-    return response.data
+        const response = await adminapi.delete(`items/${bidId}/`)
+        return response.data
         
     } catch (error) {
         console.log("Error: ", error);
     }
     
+}
+
+export const  fetchFeedback = async() =>{
+    try {
+        const response = await adminapi.get(`feedbacks/`)
+        return response.data
+        
+    } catch (error) {
+        console.log("Error: ", error);
+    }
+}
+
+export const fectUserList = async() =>{
+    try {
+        const response = await adminapi.get(`users-list/`);
+        return response.data
+    } catch (error) {
+        console.log("Error:  ", error);
+    }
+}
+
+export const DeleteUser = async (userId) =>{
+    try {
+        const response = await adminapi.delete(`Delete-user/${userId}/`)
+        return response.data
+        
+    } catch (error) {
+        console.log("Error: ", error);
+    }
+}
+
+export const BlockUser = async (userId) =>{
+    try {
+        const response = await adminapi.post(`Block-user/${userId}/`)
+        return response.data
+        
+    } catch (error) {
+        console.log("Error: ", error);
+    }
 }
