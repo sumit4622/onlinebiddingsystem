@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 from .serializers import userRegisterSerializers, itemsUploadSerializers, adminloginSerializer, bidSerializer, bidHistory, FeedbackSerializer, FeedBack
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
@@ -221,3 +222,40 @@ def deleteAuction(request, id):
     except:
         return Response({"error": "there is no item like this."}, status=status.HTTP_404_NOT_FOUND)
     
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def listUser(request):
+    users = User.objects.filter(is_superuser=False).values('id', 'username', 'email', 'is_active')
+    return Response(list(users))
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_user(request, userId):  # function name in lowercase, for Django convention
+    try:
+        user = User.objects.get(id=userId)
+        if user.is_superuser:
+            return Response({"error": "Cannot delete admin user"}, status=status.HTTP_403_FORBIDDEN)
+        user.delete()
+        return Response({"message": "User deleted successfully"}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def block_user(request, userId):
+    try:
+        user = User.objects.get(id=userId)
+        if user.is_superuser:
+            return Response({"error": "Cannot block admin user"}, status=status.HTTP_403_FORBIDDEN)
+
+        user.is_active = not user.is_active  # toggle block/unblock
+        user.save()
+
+        return Response({
+            "message": f"User {'blocked' if not user.is_active else 'unblocked'} successfully"
+        }, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

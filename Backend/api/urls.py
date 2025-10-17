@@ -15,4 +15,7 @@ urlpatterns = [
     path('feedback/<int:item_id>/sendfeedback/', views.feedback, name='feedback'),
     path("feedbacks/", views.view_all_feedback, name="all-feedbacks"),
     path('items/<int:id>/', views.deleteAuction, name="itemDelete"),
+    path('users-list/', views.listUser, name="listUser"),
+    path('Delete-user/<int:userId>/', views.delete_user, name="DeleteUser"),
+    path('Block-user/<int:userId>/', views.block_user, name="blockUser")
     ]
