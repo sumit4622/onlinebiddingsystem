@@ -1,6 +1,6 @@
 # Online Bidding System
 
-![React CI/CD](https://github.com/sumit4622/onlinebiddingsystem/actions/workflows/deploy.yml/badge.svg)
+![React CI/CD](https://github.com/sumit4622/onlinebiddingsystem/actions/workflows/ci.yml/badge.svg)
 
 An online bidding application where users can drop auction items and bid for products, while the admin can monitor all activities in real-time.
 

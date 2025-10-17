@@ -29,12 +29,12 @@ jobs:
         run: npm run build
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' # Deploy only from the main branch
+        if: github.ref == 'refs/heads/main' 
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # Ensure this token has write permissions
-          publish_dir: ./build # Directory containing the built files
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          publish_dir: ./build 
           user_name: "Your Name"
           user_email: "your-email@example.com"
-          allow_empty_commit: true # Allow empty commit (useful for first deploy)
-          force_orphan: true # Force creating an orphan branch (no history)
+          allow_empty_commit: true 
+          force_orphan: true 
