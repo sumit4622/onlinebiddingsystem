@@ -1,26 +1,24 @@
-import { useState } from 'react'
-import "../../../styles/adminCSS/DropeDown.css"
-import { Ban, Trash2, EllipsisVertical } from 'lucide-react'
+import { useState } from 'react';
+import "../../../styles/adminCSS/DropeDown.css";
+import { Ban, Trash2, EllipsisVertical, CircleSlash } from 'lucide-react';
 
-export default function DropDown({ onBlock, onDelete }) {
-    const [isOpen, setIsOpen] = useState(false)
+export default function DropDown({ onBlock, onDelete, isBlocked }) {
+  const [isOpen, setIsOpen] = useState(false);
 
-    const toggleDropdown = () => {
-        setIsOpen(prev => !prev)
-    }
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-    const handleBlock = () => {
-        onBlock()
-        setIsOpen(false)
-    }
+  const handleBlockToggle = () => {
+    onBlock(!isBlocked); 
+    setIsOpen(false);
+  };
 
-    const handleDelete = () => {
-        onDelete()
-        setIsOpen(false)
-    }
+  const handleDelete = () => {
+    onDelete();
+    setIsOpen(false);
+  };
 
-    return (
-        <div className="dropdown-wrapper">
+  return (
+    <div className="dropdown-wrapper">
       <button
         type="button"
         onClick={toggleDropdown}
@@ -28,20 +26,28 @@ export default function DropDown({ onBlock, onDelete }) {
       >
         <EllipsisVertical size={20} />
       </button>
+
       {isOpen && (
         <>
-          <div 
-            className="dropdown-backdrop"
-            onClick={() => setIsOpen(false)}
-          />
+          <div className="dropdown-backdrop" onClick={() => setIsOpen(false)} />
           <div className="dropdown-menu-custom">
             <button
-              onClick={handleBlock}
+              onClick={handleBlockToggle}
               className="dropdown-item-custom"
             >
-              <Ban size={16} />
-              Block
+              {isBlocked ? (
+                <>
+                  <CircleSlash size={16} />
+                  Unblock
+                </>
+              ) : (
+                <>
+                  <Ban size={16} />
+                  Block
+                </>
+              )}
             </button>
+
             <button
               onClick={handleDelete}
               className="dropdown-item-custom dropdown-item-danger"
@@ -53,5 +59,5 @@ export default function DropDown({ onBlock, onDelete }) {
         </>
       )}
     </div>
-    )
+  );
 }

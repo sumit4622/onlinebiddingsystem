@@ -96,7 +96,6 @@ export default function Header() {
         </div>
       </nav>
 
-      {/* Modals */}
       <LoginModal
         show={showLoginModal}
         handleClose={() => setShowLoginModal(false)}

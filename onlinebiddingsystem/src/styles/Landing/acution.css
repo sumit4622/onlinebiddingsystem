@@ -24,8 +24,7 @@ body {
 
 .swiper {
     width: 80%;
-    height: 400px;
-    margin: 20px auto;
+    padding: 0 50px;
 }
 
 .auction-card {
@@ -81,3 +80,6 @@ body {
     display: inline-block;
 }
 
+.swiper-button-prev{
+    left: 0;
+}

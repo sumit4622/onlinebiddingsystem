@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react'
-import { fectUserList, DeleteUser, BlockUser } from '../../services/adminServices'
-import DropeDown from './Components/DropeDown'
-import "../../styles/adminCSS/manage.css"
-
+import { useEffect, useState } from 'react';
+import { fectUserList, DeleteUser, BlockUser } from '../../services/adminServices';
+import DropeDown from './Components/DropeDown';
+import "../../styles/adminCSS/manage.css";
 
 export default function ManageUser() {
-
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -15,52 +13,49 @@ export default function ManageUser() {
         setUsers(response);
         console.log(response);
       } catch (error) {
-        console.log("Error:  ", error);
+        console.log("Error fetching users:", error);
       }
-    }
-    fetchUser()
-  }, []
+    };
+    fetchUser();
+  }, []);
 
-  )
-  
   const handleDelete = async (userId) => {
-  try {
-    await DeleteUser(userId);
-    setUsers(users.filter(user => user.id !== userId));
-  } catch (error) {
-    console.log("Error deleting user:", error);
-  }
-};
+    try {
+      await DeleteUser(userId);
+      setUsers((prev) => prev.filter((user) => user.id !== userId));
+    } catch (error) {
+      console.log("Error deleting user:", error);
+    }
+  };
 
-  const handleBlock = async (userId) => {
-  try {
-    await BlockUser(userId);
-    setUsers(users.map(user =>
-      user.id === userId ? { ...user, is_active: !user.is_active } : user
-    ));
-  } catch (error) {
-    console.log("Error blocking user:", error);
-  }
-};
+  const handleBlockToggle = async (userId) => {
+    try {
+      await BlockUser(userId);
+      setUsers((prev) =>
+        prev.map((user) =>
+          user.id === userId ? { ...user, is_active: !user.is_active } : user
+        )
+      );
+    } catch (error) {
+      console.log("Error toggling user block:", error);
+    }
+  };
 
   const getStatusClass = (status) => {
     switch (status) {
       case 'Blocked':
-        return 'status-badge status-blocked'
+        return 'status-badge status-blocked';
       case 'Active':
-        return 'status-badge status-active'
-      case 'Pending':
-        return 'status-badge status-pending'
+        return 'status-badge status-active';
       default:
-        return 'status-badge'
+        return 'status-badge';
     }
-  }
-
+  };
 
   return (
     <div className="p-0">
       <h1 className="text-white fw-bold p-4" style={{ backgroundColor: "#004663" }}>
-        Dropped Bid
+        Manage Users
       </h1>
 
       <div className="manage-user-content">
@@ -87,7 +82,8 @@ export default function ManageUser() {
                 </td>
                 <td className="text-end">
                   <DropeDown
-                    onBlock={() => handleBlock(user.id)}
+                    isBlocked={!user.is_active}
+                    onBlock={() => handleBlockToggle(user.id)}
                     onDelete={() => handleDelete(user.id)}
                   />
                 </td>
@@ -103,5 +99,5 @@ export default function ManageUser() {
         )}
       </div>
     </div>
-  )
+  );
 }
