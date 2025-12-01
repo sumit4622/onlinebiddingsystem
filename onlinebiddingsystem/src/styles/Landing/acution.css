@@ -1,85 +1,219 @@
-#app {
-    height: 100%;
+/* acution.css - 60-30-10 UX Color Rule */
+
+/* Color Variables 
+   60% - Primary: #004663 (Dark Teal/Navy)
+   30% - Secondary: #FF6B35 (Vibrant Orange/Coral) 
+   10% - Accent: #FFC857 (Golden Yellow)
+*/
+
+:root {
+  --primary-color: #004663;
+  --primary-light: #005a7d;
+  --primary-lighter: #e6f0f5;
+  --secondary-color: #FF6B35;
+  --secondary-hover: #ff5722;
+  /* --accent-color: #FFC857; */
+  --text-dark: #2c3e50;
+  --text-muted: #6c757d;
 }
 
-html,
-body {
-    position: relative;
-    height: 100%;
-}
-
-body {
-    background: #fff;
-    font-family:
-        Helvetica Neue,
-        Helvetica,
-        Arial,
-        sans-serif;
-    font-size: 14px;
-    color: #fff;
-    margin: 0;
-    padding: 0;
+/* Container Styling - 60% Primary in background elements */
+#Auction {
+  position: relative;
+  padding: 4rem 0 !important;
 }
 
 
-.swiper {
-    width: 80%;
-    padding: 0 50px;
+/* Heading Styling */
+#Auction h1 {
+  color: var(--primary-color) !important;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.auction-card {
-    min-width: 300px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
+#Auction h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--accent-color);
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(255, 200, 87, 0.5);
 }
 
-.auction-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+/* Swiper Container */
+.mySwiper {
+  padding: 20px 10px 50px !important;
 }
 
-.card-image {
-    height: 200px;
-    background: linear-gradient(45deg, #f0f2f5, #e1e8ed);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: #667eea;
+/* Card Styling - 60% Primary accents
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 70, 99, 0.15);
+  transition: all 0.4s ease;
+  background: white;
+  position: relative;
+} */
+
+/* .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+} */
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 70, 99, 0.25);
 }
 
-.card-content {
-    padding: 25px;
+.card:hover::before {
+  opacity: 1;
 }
 
+/* Card Body */
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Image Styling */
+.card-body img {
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  border: 2px solid var(--primary-lighter);
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+/* Card Title - Primary Color */
 .card-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #252625;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-top: 1rem;
 }
 
-.card-price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #252625;
-    margin-bottom: 10px;
+/* Card Subtitle */
+.card-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
-.card-timer {
-    background: #0650fe;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 25px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    display: inline-block;
+/* Price Display - 10% Accent Color */
+.fw-bold {
+  /* color: var(--accent-color); */
+  font-size: 1.3rem;
+  font-weight: 700px;
+  text-shadow: 1px 1px 2px rgba(255, 200, 87, 0.3);
 }
 
-.swiper-button-prev{
-    left: 0;
+/* Horizontal Rules */
+.card hr {
+  border-color: var(--primary-lighter);
+  opacity: 0.6;
+  margin: 1rem 0;
+}
+
+/* Button Styling - 30% Secondary Color */
+.btn-dark {
+  /* background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-hover) 100%) !important; */
+  border: none !important;
+  /* color: white !important; */
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  /* box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); */
+}
+
+
+
+
+/* Swiper Navigation Buttons - Primary Color */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--primary-color) !important;
+  background: white;
+  width: 45px !important;
+  height: 45px !important;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 70, 99, 0.2);
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 20px !important;
+  font-weight: bold;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: var(--primary-color);
+  color: white !important;
+  box-shadow: 0 5px 15px rgba(0, 70, 99, 0.3);
+  transform: scale(1.1);
+}
+
+/* Swiper Pagination - Accent Color */
+.swiper-pagination-fraction {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+  font-size: 1rem;
+  background: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 3px 10px rgba(0, 70, 99, 0.15);
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto !important;
+}
+
+/* Time Component Styling */
+.card-body .d-flex {
+  align-items: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  #Auction {
+    padding: 2rem 0 !important;
+  }
+
+  #Auction h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  .fw-bold {
+    font-size: 1.1rem;
+  }
+
+  .btn-dark {
+    padding: 0.6rem 1.5rem;
+  }
 }

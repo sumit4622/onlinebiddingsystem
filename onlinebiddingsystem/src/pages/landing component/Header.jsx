@@ -5,8 +5,8 @@ import LoginModal from "../../pages/login/LoginModal.jsx";
 import LogoutModal from "../login/LogoutModal.jsx";
 import { ACCESS_TOKEN } from "../../constants.js";
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar } from "antd"
-import '../../App.css'
+import { Avatar } from "antd";
+import '../../App.css';
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,16 +15,9 @@ export default function Header() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate('/UserProfile')
-  }
-
-  const handleHomeNavigate = () =>{
-    navigate('/')
-  }
-  const handleAuctionNavigate = () =>{
-    navigate('/dashboard')
-  }
+  const handleNavigate = () => navigate('/UserProfile');
+  const handleHomeNavigate = () => navigate('/');
+  const handleAuctionNavigate = () => navigate('/dashboard');
 
   useEffect(() => {
     const token = localStorage.getItem(ACCESS_TOKEN);
@@ -33,8 +26,9 @@ export default function Header() {
 
   return (
     <>
-      <nav className="navbar  navbar-expand-lg navbar-light bg-light fixed-top">
-        <a className="navbar-brand" >Online Bidding</a>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top px-3">
+        <a className="navbar-brand" style={{ cursor: "pointer" }}>Online Bidding</a>
+
         <button
           className="navbar-toggler"
           type="button"
@@ -45,26 +39,48 @@ export default function Header() {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item active">
-              <a className="nav-link" href="#Home" onClick={handleHomeNavigate}>Home</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#Auction" onClick={handleAuctionNavigate}>Auction</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#Contact">Contact Us</a>
-            </li>
-          </ul>
-          <form className="d-flex gap-3 px-3">
-            <input className="form-control me-2" type="search" placeholder="Search" />
-            <button className="btn btn-outline-primary" type="submit">Search</button>
- 
+
+
+          <ul className="navbar-nav mb-2 mb-lg-0">
             {isLoggedIn ? (
               <>
+                <li className="nav-item">
+                  <a className="nav-link" onClick={handleAuctionNavigate} style={{ cursor: "pointer" }}>
+                    Auction
+                  </a>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <a className="nav-link" onClick={handleHomeNavigate} style={{ cursor: "pointer" }}>
+                    Home
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" onClick={handleAuctionNavigate} style={{ cursor: "pointer" }}>
+                    Auction
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#Contact">
+                    Contact Us
+                  </a>
+                </li>
+              </>
+            )}
+          </ul>
+
+
+          <div className="ms-auto d-flex align-items-center gap-3">
+
+            {isLoggedIn ? (
+              <>
+                <input className="form-control" type="search" placeholder="Search" />
+                <button className="btn btn-outline-primary">Search</button>
+
                 <button
                   className="btn btn-outline-danger"
-                  type="button"
                   onClick={() => setShowLogoutModal(true)}
                 >
                   Logout
@@ -83,6 +99,7 @@ export default function Header() {
                 >
                   Login
                 </button>
+
                 <button
                   className="btn btn-outline-primary"
                   type="button"
@@ -92,10 +109,12 @@ export default function Header() {
                 </button>
               </>
             )}
-          </form>
+
+          </div>
         </div>
       </nav>
 
+      {/* MODALS */}
       <LoginModal
         show={showLoginModal}
         handleClose={() => setShowLoginModal(false)}

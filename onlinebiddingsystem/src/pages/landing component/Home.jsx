@@ -1,17 +1,17 @@
 
-import  Header  from '../landing component/Header'
+import Header from '../landing component/Header'
 import '../../styles/Landing/Home.css';
 
 export default function Home() {
   return (
     <div>
       <>
-      <Header />
+        <Header />
       </>
       <div className=" gradient text-center p-3 " id='Home'>
         <header className="text-white p-5">
-            <h1 className="display-1 pw-bold p-3 ">Bid Smart. Win Big.</h1>
-            <p className="lead fs-4 mb-4">Join our secure and transparent online bidding platform</p>
+          <h1 className="display-1 pw-bold  fw-bold p-3 ">Bid Smart. Win Big.</h1>
+          <p className="lead fs-4 mb-4">Join our secure and transparent online bidding platform</p>
         </header>
         <div className="container">
           <div className="row justify-content-center">
@@ -25,8 +25,8 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            </div>
           </div>
+        </div>
       </div>
     </div>
   )

@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import "../../../styles/adminCSS/DropeDown.css";
-import { Ban, Trash2, EllipsisVertical, CircleSlash } from 'lucide-react';
+import { 
+  Ban, 
+  Trash2,
+  EllipsisVertical,
+  CircleSlash
+ } from 'lucide-react';
 
 export default function DropDown({ onBlock, onDelete, isBlocked }) {
   const [isOpen, setIsOpen] = useState(false);

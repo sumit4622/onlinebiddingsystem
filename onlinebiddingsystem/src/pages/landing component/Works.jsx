@@ -6,7 +6,7 @@ export default function Works() {
     <div id="join">
       <section className="py-5">
         <div className="container">
-          <h2 className="text-center mb-5">How It Works</h2>
+          <h2 className="text-center fs-1 fw-bold " id='Header'>How It Works</h2>
           <div className="row g-4">
             <div className="col-md-3 col-sm-6">
               <div className="text-center step">

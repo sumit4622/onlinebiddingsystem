@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { 
+  Modal,
+  Button,
+  Form,
+  Row,
+  Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 
@@ -36,9 +41,9 @@ export default function RegisterModal({ show, handleClose }) {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered size="lg">
+    <Modal show={show} onHide={handleClose} centered size="md">
       <Form onSubmit={handleSubmit}>
-        <Modal.Header closeButton>
+        <Modal.Header >
           <Modal.Title>Register</Modal.Title>
         </Modal.Header>
 
