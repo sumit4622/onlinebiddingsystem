@@ -18,7 +18,7 @@ export default function DroppedBid() {
           id: item.id,
           title: item.title,
           description: item.description,
-          imageUrl: `http://127.0.0.1:8000${item.image}`,
+          imageUrl: `http://20.40.56.69:8000${item.image}`,
           minBid: parseFloat(item.minimum_bid),
           startDate: item.start_date,
           endDate: item.end_date,
