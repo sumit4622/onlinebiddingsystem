@@ -25,7 +25,7 @@ import AdminWrapper from "./pages/AdminWrapper.jsx";
 
 function Logout() {
   localStorage.clear();
-  return <Navigate to="/LandingPage" />;
+  return <Navigate to="/" />;
 }
 
 export default function App() {

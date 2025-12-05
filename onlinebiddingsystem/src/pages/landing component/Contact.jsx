@@ -8,7 +8,7 @@ export default function Contact() {
         <div className="container">
           <div className="row align-items-center g-5">
             <div className="col-md-6">
-              <h2 className=' fs-1'>Contact Us</h2>
+              <h2 className=' fs-1 fw-bold'style={{ color: '#fff'}}>Contact Us</h2>
               <p className=' fs-6'>Have questions? We're here to help you succeed in your bidding journey.</p>
             </div>
             <div className="col-md-6">

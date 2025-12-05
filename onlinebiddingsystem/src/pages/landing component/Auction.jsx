@@ -1,170 +1,109 @@
 import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
+import { fetchApprovedBid } from "../../services/userServices";
+import TimeCompact from '../Support/compactTime';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import '../../styles/Landing/acution.css';
-import { Pagination, Navigation } from 'swiper/modules';
+import LoginModal from '../../pages/login/LoginModal';
+import { useNavigate } from 'react-router-dom';
 
 export default function Auction() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [showAuction, setShowAuction] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
+  const fetchApprovedBids = async () => {
+    try {
+      const response = await fetchApprovedBid();
+      const approved = response.filter(item => item.is_approved);
+      setShowAuction(approved);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      } else if (error.request) {
+        console.error("No Response Received:", error.request);
+      } else {
+        alert('Error: ' + error.message);
+      }
+    }
+  };
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    fetchApprovedBids();
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    if (token) setIsLoggedIn(true);
   }, []);
 
+  const handleBidClick = (item) => {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+  };
+
+
   return (
+    <>
+      <div className="container py-5" id="Auction">
+        <h1 className="text-center" style={{ color: "black" }}>
+          Featured Auctions
+        </h1>
 
-    <div className="container py-5" id='Auction'>
-      <h1 className=" text-center" style={{ zIndex: 10, color: "black" }}>
-        Featured Auctions
-      </h1>
-
-      <Swiper
-        centeredSlides={true}
-        spaceBetween={30}
-        pagination={{ type: 'fraction' }}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        breakpoints={{
-          0: {
-            slidesPerView: 1,
-          },
-          768: {
-            slidesPerView: 2,
-          },
-          992: {
-            slidesPerView: 3,
-          },
-        }}
-        className="mySwiper"
-      >
-
-        <SwiperSlide>
-          {isMobile ? (
-            // Mobile Design
-            <div className="card" style={{width:'18rem'}}>
-              <div className="Picture display-1 card-image">💰</div>
-              <div className="card-body">
-                <h5 className="card-tittle">Luxury Watch Set</h5>
-                <p className='card-subtittle mb-2 text-muted'> This is watch we want</p>
-                <hr />
-                <div className="d-flex justify-content-between align-items-center">
-                    <p className='fw-bold mb-0'>Rs: 4000</p>
-                    <div className="Duration bg-dark rounded-pill pt-2 pb-2 px-3  text-white">
-                      <p className='mb-0'>2d 7hr 40min</p>
-                    </div>
+        <Swiper
+          spaceBetween={35}
+          pagination={{ type: 'fraction' }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          autoHeight={true}
+          breakpoints={{
+            0: { slidesPerView: 1, spaceBetween: 15 },
+            768: { slidesPerView: 2, spaceBetween: 25 },
+            992: { slidesPerView: 3, spaceBetween: 35 },
+          }}
+          className="mySwiper"
+        >
+          {showAuction.map((item) => (
+            <SwiperSlide key={item.id}>
+              <div className="card h-100 mb-4 mt-4">
+                <div className="card-body">
+                  <img
+                    src={`http://localhost:8000${item.image}`}
+                    alt={item.title}
+                    style={{ width: '100%', height: '12rem', objectFit: 'cover' }}
+                  />
+                  <h5 className="card-title mt-3">{item.title}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">{item.description}</h6>
+                  <hr />
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <p className="fw-bold mb-0">Rs: {item.minimum_bid}</p>
+                    <TimeCompact end={item.end_date} />
                   </div>
                   <hr />
-                  <button className='btn btn-dark'>Start Bid</button>
+                  <button
+                    className="btn btn-dark"
+                    style={{ backgroundColor: '#3C3C43' }}
+                    onClick={() => handleBidClick(item)}
+                  >
+                    Start Bid
+                  </button>
+                </div>
               </div>
-            </div>
-          ) : (
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
 
-            <div className="card" style={{width:'18rem'}}>
-              <div className="Picture display-1 card-image">💰</div>
-              <div className="card-body">
-                <h5 className="card-tittle">Luxury Watch Set</h5>
-                <p className='card-subtittle mb-2 text-muted'> This is watch we want</p>
-                <hr />
-                <div className="d-flex justify-content-between align-items-center">
-                    <p className='fw-bold mb-0'>Rs: 4000</p>
-                    <div className="Duration bg-dark rounded-pill pt-2 pb-2 px-3  text-white">
-                      <p className='mb-0'>2d 7hr 40min</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <button className='btn btn-dark'>Start Bid</button>
-              </div>
-            </div>
-          )}
-        </SwiperSlide>
-
-        <SwiperSlide>
-          {isMobile ? (
-            <div className="card" style={{width:'18rem'}}>
-              <div className="Picture display-1 card-image">💰</div>
-              <div className="card-body">
-                <h5 className="card-tittle">Luxury Watch Set</h5>
-                <p className='card-subtittle mb-2 text-muted'> This is watch we want</p>
-                <hr />
-                <div className="d-flex justify-content-between align-items-center">
-                    <p className='fw-bold mb-0'>Rs: 4000</p>
-                    <div className="Duration bg-dark rounded-pill pt-2 pb-2 px-3  text-white">
-                      <p className='mb-0'>2d 7hr 40min</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <button className='btn btn-dark'>Start Bid</button>
-              </div>
-            </div>
-          ) : (
-            <div className="card" style={{width:'18rem'}}>
-              <div className="Picture display-1 card-image">💰</div>
-              <div className="card-body">
-                <h5 className="card-tittle">Luxury Watch Set</h5>
-                <p className='card-subtittle mb-2 text-muted'> This is watch we want</p>
-                <hr />
-                <div className="d-flex justify-content-between align-items-center">
-                    <p className='fw-bold mb-0'>Rs: 4000</p>
-                    <div className="Duration bg-dark rounded-pill pt-2 pb-2 px-3  text-white">
-                      <p className='mb-0'>2d 7hr 40min</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <button className='btn btn-dark'>Start Bid</button>
-              </div>
-            </div>
-          )}
-        </SwiperSlide>
-
-
-        <SwiperSlide>
-          {isMobile ? (
-            <div className="card" style={{width:'18rem'}}>
-              <div className="Picture display-1 card-image">💰</div>
-              <div className="card-body">
-                <h5 className="card-tittle">Luxury Watch Set</h5>
-                <p className='card-subtittle mb-2 text-muted'> This is watch we want</p>
-                <hr />
-                <div className="d-flex justify-content-between align-items-center">
-                    <p className='fw-bold mb-0'>Rs: 4000</p>
-                    <div className="Duration bg-dark rounded-pill pt-2 pb-2 px-3  text-white">
-                      <p className='mb-0'>2d 7hr 40min</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <button className='btn btn-dark'>Start Bid</button>
-              </div>
-            </div>
-
-          ) : (
-            <div className="card" style={{width:'18rem'}}>
-              <div className="Picture display-1 card-image">💰</div>
-              <div className="card-body">
-                <h5 className="card-tittle">Luxury Watch Set</h5>
-                <p className='card-subtittle mb-2 text-muted'> This is watch we want</p>
-                <hr />
-                <div className="d-flex justify-content-between align-items-center">
-                    <p className='fw-bold mb-0'>Rs: 4000</p>
-                    <div className="Duration bg-dark rounded-pill pt-2 pb-2 px-3  text-white">
-                      <p className='mb-0'>2d 7hr 40min</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <button className='btn btn-dark'>Start Bid</button>
-              </div>
-            </div>
-          )}
-        </SwiperSlide>
-      </Swiper>
-    </div>
+      <LoginModal
+        show={showLoginModal}
+        handleClose={() => setShowLoginModal(false)}
+        setIsLoggedIn={setIsLoggedIn}
+      />
+    </>
   );
 }
