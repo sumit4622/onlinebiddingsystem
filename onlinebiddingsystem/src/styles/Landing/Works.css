@@ -1,3 +1,31 @@
+:root {
+  --primary-color: #004663;
+  --primary-light: #005a7d;
+  --primary-lighter: #e6f0f5;
+  --secondary-color: #FF6B35;
+  --secondary-hover: #ff5722;
+  /* --accent-color: #FFC857; */
+  --text-dark: #2c3e50;
+  --text-muted: #6c757d;
+}
+
+
+/* <h2 className="text-center mb-5">How It Works</h2> */
+
+#Auction h1 {
+  color: var(--primary-color) !important;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#Header {
+  color: var(--primary-color) !important;
+  
+}
+
 .step .step-icon {
   width: 80px;
   height: 80px;
@@ -11,6 +39,33 @@
   transition: all 0.3s ease;
 }
 
-.step:hover .step-icon {
-  transform: scale(1.1) rotate(5deg);
+
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+}
+
+
+
+
+
+@media (max-width: 767px) {
+  #join h2 {
+    font-size: 2rem;
+  }
+
+  .step {
+    margin-bottom: 2rem;
+  }
+
+  .step-icon {
+    width: 70px !important;
+    height: 70px !important;
+    font-size: 1.75rem !important;
+  }
 }

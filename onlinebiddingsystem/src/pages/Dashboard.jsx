@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [showAuctionModal, setShowAuctionModal] = useState(false);
   const [activeBidIndex, setActiveBidIndex] = useState(null);
   const [approvedBids, setApprovedBids] = useState([]);
+  const [retiredStates, setRetiredStates] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,35 +25,12 @@ export default function Dashboard() {
       const approved = response.filter(item => item.is_approved);
       setApprovedBids(approved);
     } catch (error) {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log("error:", error.message);
-        alert('Error:', error.message);
-      }
       console.error("Error fetching data:", error);
     }
-  }
-
-  const handleSortChange = (event) => {
-    setSortBy(event.target.value);
   };
 
-  const handleCreateAuctionClick = () => {
-    setShowAuctionModal(true);
-  };
-
-  const handleCloseAuctionModal = () => {
-    setShowAuctionModal(false);
-  };
-
-  const handleContinueAuction = () => {
-    setShowAuctionModal(false);
-    navigate('/UserProfile/upload');
+  const handleRetiredState = (id, retired) => {
+    setRetiredStates(prev => ({ ...prev, [id]: retired }));
   };
 
   const handleBidClick = (item) => {
@@ -64,8 +42,8 @@ export default function Dashboard() {
   };
 
   const handleContinueBid = () => {
-    setActiveBidIndex(null);
     navigate(`/auction/${activeBidIndex.id}`, { state: { item: activeBidIndex } });
+    setActiveBidIndex(null);
   };
 
   return (
@@ -78,15 +56,13 @@ export default function Dashboard() {
           <div className="d-flex justify-content-between align-items-center ">
             <h1 className="text-white fw-bold mb-0 m-3"
               style={{
-                fontFamily: "fw-bold",
-                fontSize: "clamp(2.5rem, 6vw, 5rem)",
-                minWidth: "fit-content"
+                fontSize: "clamp(2.5rem, 6vw, 5rem)"
               }}>
               Auctions
             </h1>
 
-            <Form.Group controlId="sortBySelect" className="mb-0 mt-3" style={{ width: '14rem', minWidth: '14rem' }}>
-              <Form.Select value={sortBy} onChange={handleSortChange}>
+            <Form.Group style={{ width: '14rem' }}>
+              <Form.Select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                 <option value="" disabled hidden>Sort By</option>
                 <option value="latest">Latest</option>
                 <option value="week">Previous Week</option>
@@ -109,16 +85,30 @@ export default function Dashboard() {
                     alt="Auction Item"
                     style={{ width: '100%', height: '12rem' }}
                   />
+
                   <h5 className="card-title">{item.title}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">{item.description}</h6>
+
                   <hr />
+
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <p className='fw-bold mb-0'>Rs: {item.minimum_bid}</p>
-                    <TimeCompact end={item.end_date} />
+
+                    <TimeCompact 
+                      end={item.end_date} 
+                      onRetiredChange={(retired) => handleRetiredState(item.id, retired)} 
+                    />
                   </div>
 
                   <hr />
-                  <button className='btn btn-dark' style={{ backgroundColor: '#3C3C43' }} onClick={() => handleBidClick(item)}>Start Bid</button>
+
+                  <button
+                    className='btn btn-dark'
+                    style={{ backgroundColor: '#3C3C43' }}
+                    onClick={() => handleBidClick(item)}
+                  >
+                    {retiredStates[item.id] ? "View Details" : "Start Bid"}
+                  </button>
 
                   {activeBidIndex === item && (
                     <SureModal onClose={handleCloseBidModal} onContinue={handleContinueBid} />
@@ -133,13 +123,13 @@ export default function Dashboard() {
       <button
         className='btn btn-dark text-light rounded-pill position-fixed floating-button'
         style={{ backgroundColor: '#3C3C43', width: '10rem', height: '3rem', bottom: '20px', right: '80px' }}
-        onClick={handleCreateAuctionClick}
+        onClick={() => setShowAuctionModal(true)}
       >
         Create Auction
       </button>
 
       {showAuctionModal && (
-        <SureModal onClose={handleCloseAuctionModal} onContinue={handleContinueAuction} />
+        <SureModal onClose={() => setShowAuctionModal(false)} onContinue={() => navigate('/UserProfile/upload')} />
       )}
     </>
   );

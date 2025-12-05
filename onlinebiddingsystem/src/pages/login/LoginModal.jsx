@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Alert } from 'react-bootstrap';
+import { 
+  Modal,
+  Button,
+  Form,
+  Alert 
+} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import api from "../../api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
@@ -38,9 +43,9 @@ export default function LoginModal({ show, handleClose, setIsLoggedIn }) {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered size='lg'>
+    <Modal show={show} onHide={handleClose} centered size='md'>
       <Form onSubmit={handleSubmit}>
-        <Modal.Header closeButton>
+        <Modal.Header >
           <Modal.Title>Log In</Modal.Title>
         </Modal.Header>
 

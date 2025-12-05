@@ -1,8 +1,14 @@
-import React from "react";
 import { useCountdown } from "./Countdown";
+import { useEffect } from "react";
 
-export default function TimeCompact({ end }) {
+export default function TimeCompact({ end, onRetiredChange }) {
   const { days, hours, minutes, retired } = useCountdown(end);
+
+  useEffect(() => {
+    if (onRetiredChange) {
+      onRetiredChange(retired);
+    }
+  }, [retired]); 
 
   return (
     <div

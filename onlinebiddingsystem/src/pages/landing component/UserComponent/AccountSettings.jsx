@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Form, Button, Row, Col } from 'react-bootstrap';
+import { getuserUpdate, userUpdate } from '../../../services/userServices';
 
 export default function AccountSetting() {
   const [isEditable, setIsEditable] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -11,18 +13,57 @@ export default function AccountSetting() {
     password: '',
   });
 
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getuserUpdate(); 
+        const data = response.data;
+
+        setFormData({
+          firstName: data.first_name || '',
+          lastName: data.last_name || '',
+          email: data.email || '',
+          password: '',
+        });
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        alert("Unable to fetch user data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const toggleEdit = () => {
+  
+  const toggleEdit = async () => {
+    if (isEditable) {
+      // When saving
+      try {
+        const updateResponse = await userUpdate(formData);
+        alert("Profile updated successfully!");
+
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Failed to update profile.");
+      }
+    }
+
     setIsEditable(!isEditable);
-    // Optional: save logic here
   };
+
+  if (loading) return <p className="text-center mt-4">Loading...</p>;
 
   return (
     <div className="account-settings-container d-flex justify-content-center align-items-center vh-100 bg-light">
@@ -38,7 +79,6 @@ export default function AccountSetting() {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="Enter first name"
                 disabled={!isEditable}
               />
             </Col>
@@ -52,7 +92,6 @@ export default function AccountSetting() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Enter last name"
                 disabled={!isEditable}
               />
             </Col>
@@ -66,13 +105,12 @@ export default function AccountSetting() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter email"
                 disabled={!isEditable}
               />
             </Col>
           </Form.Group>
 
-          <Form.Group as={Row} className="mb-4">
+          {/* <Form.Group as={Row} className="mb-4">
             <Form.Label column sm={4}>Password:</Form.Label>
             <Col sm={8}>
               <Form.Control
@@ -80,11 +118,11 @@ export default function AccountSetting() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter password"
+                placeholder="Leave blank to keep current password"
                 disabled={!isEditable}
               />
             </Col>
-          </Form.Group>
+          </Form.Group> */}
 
           <div className="edit-button-container d-flex justify-content-end">
             <Button variant={isEditable ? 'primary' : 'outline-dark'} onClick={toggleEdit}>

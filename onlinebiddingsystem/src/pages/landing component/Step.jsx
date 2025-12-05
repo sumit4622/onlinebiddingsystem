@@ -1,10 +1,11 @@
+import "../../styles/Landing/Choose.css";
 
 export default function Step() {
   return (
     <div >
-      <section className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
+      <section className="py-5" >
         <div className="container">
-          <h2 className="text-center text-dark mb-5">Why Choose Us?</h2>
+          <h2 className="text-center fs-1 fw-bold  mb-5"style={{ color: '#004663' }}>Why Choose Us?</h2>
           <div className="row g-4">
             <div className="col-md-4">
               <div
