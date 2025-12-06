@@ -259,3 +259,87 @@ def block_user(request, userId):
         }, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    user = request.user
+    user.first_name = request.data.get("firstName", user.first_name)
+    user.last_name = request.data.get("lastName", user.last_name)
+    user.email = request.data.get("email", user.email)
+
+
+    user.save()
+    return Response({"message": "Profile updated successfully"})
+
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getProfile(request):
+    try:
+        user = request.user
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+        })
+    except:
+        return Response({"error": "user not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def BiddingHistory(request):
+    try:
+        user = request.user
+
+        bids = bid.objects.filter(user=user).select_related("item")
+
+        data = []
+        for b in bids:
+
+            
+            highest = bid.objects.filter(item=b.item).order_by("-bid_amount").first()
+            current_bid = highest.bid_amount if highest else 0
+
+            data.append({
+                "id": b.id,
+                "itemName": b.item.title,          
+                "image": b.item.image.url if b.item.image else None,
+                "yourBid": b.bid_amount,           
+                "currentBid": current_bid,         
+                "status": "Started"
+            })
+
+        return Response({"bids": data}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def uploadItem(request):
+    try:
+        user = request.user
+
+        uploads = itemsUpload.objects.filter(user=user)
+
+        data = []
+        for item in uploads:
+            data.append({
+                "id": item.id,
+                "name": item.title,              
+                "image": item.image.url if item.image else None,
+                "date": item.created_at.date(),
+            })
+
+        return Response({"uploads": data}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+

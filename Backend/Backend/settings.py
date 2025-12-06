@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-^(72+w#-$(jzsn90ony0%t_5i0!%^h=b7n^-h+uktjb=o$)%de
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["20.40.56.69","*"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -57,15 +57,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     "api",
-    
     "rest_framework",
     "corsheaders",
     "rest_framework_simplejwt",
-    
     "channels",
-
 ]
 
 ASGI_APPLICATION = "Backend.asgi.application"
