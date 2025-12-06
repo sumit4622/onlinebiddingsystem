@@ -17,5 +17,9 @@ urlpatterns = [
     path('items/<int:id>/', views.deleteAuction, name="itemDelete"),
     path('users-list/', views.listUser, name="listUser"),
     path('Delete-user/<int:userId>/', views.delete_user, name="DeleteUser"),
-    path('Block-user/<int:userId>/', views.block_user, name="blockUser")
+    path('Block-user/<int:userId>/', views.block_user, name="blockUser"),
+    path("userUpdate/", views.update_profile, name="updateProfile"),
+    path("getuser/", views.getProfile, name="getUpdate"),
+    path("BiddingHistory/", views.BiddingHistory, name="BiddingHistory"),
+    path('uploadItem/', views.uploadItem, name='uploadItem')
     ]

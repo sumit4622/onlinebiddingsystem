@@ -168,7 +168,7 @@ export default function AuctionPage() {
       <div className="container d-flex justify-content-md-around" style={{ marginTop: '4rem' }}>
         <div className="imgcontainer">
           <img
-            src={`http://20.40.56.69:8000${item.image}`}
+            src={`http://localhost:8000${item.image}`}
             alt="BidImage"
             style={{ width: '650px', height: 'auto' }}
           />
