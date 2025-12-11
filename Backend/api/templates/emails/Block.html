@@ -1,98 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blocked User</title>
-</head>
-<body>
-    <div class="container" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); font-family: sans-serif;">
-        
-        <div class="header" style="display: flex; align-items: center; margin-bottom: 30px;">
-            <img src="https://via.placeholder.com/24" alt="Untitled UI Logo" style="height: 24px; margin-right: 8px;"> 
-            <span style="font-weight: bold; color: #333333;">Untitled UI</span>
-        </div>
-
-        <div class="content" style="color: #333333; line-height: 1.6;">
-            <p style="margin: 0 0 10px 0;">Hi {{ user_name }},</p>
-            <p style="margin: 0 0 20px 0;">We are blocking your account because we found some suspicious activity for you. we are trying to find it out. <strong>Untitled</strong>.</p>
-
-            <p style="margin: 20px 0 5px 0;">Thanks,</p>
-            <p style="margin: 0;">The Bidding Team</p>
-        </div>
-
-        <div class="footer" style="margin-top: 40px; font-size: 12px; color: #777777; text-align: center; border-top: 1px solid #eeeeee; padding-top: 20px;">
-            <p style="margin: 5px 0;">Questions? Reply to this email and we'll get back to you quickly!</p>
-        </div>
-    </div>
-    
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <div
+      class="container"
       style="
         max-width: 600px;
-        margin: 0 auto;
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        border-top: 5px solid #ff6b6b;
+        margin: 20px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
       "
     >
-    <div style="text-align: center; margin-bottom: 30px">
-        <div
-          style="
-            display: inline-block;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: bold;
-          "
-        >
-          Block User 
-        </div>
-        <div>
-            <h2 style="
-          color: #333;
-          margin-bottom: 25px;
-          font-size: 24px;
-          font-weight: 600;
-        "> hello {{ user_name}},</h2>
-        <p style ="font-size: 18px;
-          line-height: 1.7;
-          color: #444;
-          margin-bottom: 20px;
-          ">
-        We are blocking your account because we found some suspicious activity for you. we are trying to find it out. </p>
-        <div
-        style="border-top: 1px solid #eee; padding-top: 25px; margin-top: 35px"
+      <div
+        class="header"
+        style="display: flex; align-items: center; margin-bottom: 30px"
       >
-        <p style="font-size: 16px; line-height: 1.6; color: #555; margin: 0">
-          Best regards,<br />
-          <span style="color: #4caf50; font-weight: 600">The Bidding Team</span>
-        </p>
+        <span style="font-weight: bold; color: #333333">The Bidding Team,</span>
       </div>
 
-      <p
+      <div class="content" style="color: #333333; line-height: 1.6">
+        <p style="margin: 0 0 10px 0">Hello {{ user_name }},</p>
+        <p style="margin: 0 0 20px 0">
+          We are blocking your account because we found some
+          <strong>suspicious activity</strong> for you. we are trying to find it
+          out.
+        </p>
+
+        <p style="margin: 20px 0 5px 0">Thanks,</p>
+        <p style="margin: 0">
+          <span style="font-weight: 600; ">The Bidding Team</span></p>
+      </div>
+
+      <div
+        class="footer"
         style="
-          font-size: 13px;
-          color: #888;
-          margin: 20px 0 0 0;
+          margin-top: 40px;
+          font-size: 12px;
+          color: #777777;
           text-align: center;
+          border-top: 1px solid #eeeeee;
+          padding-top: 20px;
         "
       >
-        Questions? Reply to this email and we'll get back to you quickly!
-      </p>
+        <p style="margin: 5px 0">
+          Don't reply this email. we'll get back to you quickly!
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

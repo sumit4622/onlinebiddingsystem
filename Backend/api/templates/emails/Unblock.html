@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bid Rejected</title>
+    <title>Blocked User</title>
   </head>
   <body>
     <div
@@ -22,44 +22,18 @@
         class="header"
         style="display: flex; align-items: center; margin-bottom: 30px"
       >
-        <span style="font-weight: bold; color: #333333">BID REJECTION</span>
+        <span style="font-weight: bold; color: #333333">The Bidding Team,</span>
       </div>
 
       <div class="content" style="color: #333333; line-height: 1.6">
         <p style="margin: 0 0 10px 0">Hello {{ user_name }},</p>
-
         <p style="margin: 0 0 20px 0">
-          Thank you for your interest in
-          <strong>{{ project_name }}"</strong>. After careful consideration, we
-          have decided not to move with your bidding proposal.
+          Your account has been <strong>successfully unblocked</strong>, and you
+          can now log in again.
         </p>
+        <p style="margin: 0 0 20px 0">Thanks for your time.</p>
 
-        {% if bid_amount %}
-        <div
-          style="
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 25px 0;
-          "
-        >
-          <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px">
-            Your Bid Details:
-          </h3>
-
-          <p style="margin: 5px 0; color: #666; font-size: 16px">
-            <strong>Bid Amount:</strong> Rs{{ bid_amount }}
-          </p>
-
-          {% if time %}
-          <p style="margin: 5px 0; color: #666; font-size: 16px">
-            <strong>Timeline:</strong> {{ time }}
-          </p>
-          {% endif %}
-        </div>
-        {% endif %}
-
-        <p style="margin: 20px 0 5px 0">Best regards,</p>
+        <p style="margin: 20px 0 5px 0">Thanks,</p>
         <p style="margin: 0">
           <span style="font-weight: 600">The Bidding Team</span>
         </p>
