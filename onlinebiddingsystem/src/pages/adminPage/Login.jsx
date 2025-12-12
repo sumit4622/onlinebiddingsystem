@@ -15,7 +15,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await adminapi.post("admin-login/", formValues);
+      const response = await adminapi.post("/admin-login/", formValues);
 
       const { access, refresh } = response.data;
       if (!access) throw new Error("No access token returned");

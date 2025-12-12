@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Form } from 'react-bootstrap';
 import Header from './landing component/Header';
 import LogoutModal from "./login/LogoutModal";
 import SureModal from '../landingPage/Components/SureModal';
@@ -8,11 +7,11 @@ import { fetchApprovedBid } from '../services/userServices';
 import TimeCompact from './Support/compactTime';
 
 export default function Dashboard() {
-  const [sortBy, setSortBy] = useState('');
   const [showAuctionModal, setShowAuctionModal] = useState(false);
   const [activeBidIndex, setActiveBidIndex] = useState(null);
   const [approvedBids, setApprovedBids] = useState([]);
   const [retiredStates, setRetiredStates] = useState({});
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,37 +45,29 @@ export default function Dashboard() {
     setActiveBidIndex(null);
   };
 
+  
+  const filteredBids = approvedBids.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       <LogoutModal />
-      <Header />
+      <Header onSearch={(value) => setSearchQuery(value)} />
 
       <div className='py-5' style={{ backgroundColor: '#004663' }}>
         <div className="container">
-          <div className="d-flex justify-content-between align-items-center ">
-            <h1 className="text-white fw-bold mb-0 m-3"
-              style={{
-                fontSize: "clamp(2.5rem, 6vw, 5rem)"
-              }}>
-              Auctions
-            </h1>
-
-            <Form.Group style={{ width: '14rem' }}>
-              <Form.Select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="" disabled hidden>Sort By</option>
-                <option value="latest">Latest</option>
-                <option value="week">Previous Week</option>
-                <option value="month">Previous Month</option>
-                <option value="retired">Retired</option>
-              </Form.Select>
-            </Form.Group>
-          </div>
+          <h1 className="text-white fw-bold mb-0 m-3"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+            Auctions
+          </h1>
         </div>
       </div>
 
       <div className='container'>
         <div className="row">
-          {approvedBids.map((item) => (
+          {filteredBids.map((item) => (
             <div key={item.id} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4">
               <div className="card h-100">
                 <div className="card-body">
@@ -94,9 +85,9 @@ export default function Dashboard() {
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <p className='fw-bold mb-0'>Rs: {item.minimum_bid}</p>
 
-                    <TimeCompact 
-                      end={item.end_date} 
-                      onRetiredChange={(retired) => handleRetiredState(item.id, retired)} 
+                    <TimeCompact
+                      end={item.end_date}
+                      onRetiredChange={(retired) => handleRetiredState(item.id, retired)}
                     />
                   </div>
 

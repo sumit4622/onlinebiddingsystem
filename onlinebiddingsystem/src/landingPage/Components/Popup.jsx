@@ -17,7 +17,7 @@ export default function PopMessage({ isAuctionEnded }) {
         <Page>
             <Popup display="center" isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
                 <div className="mbsc-align-center mbsc-padding">
-                    <img src="https://img.mobiscroll.com/demos/logo-noshadow.jpg" alt="logo" />
+                    {/* <img src="https://img.mobiscroll.com/demos/logo-noshadow.jpg" alt="logo" /> */}
                     <h4>
                         Hello, this bid has been completed.<br />
                         Thank you!

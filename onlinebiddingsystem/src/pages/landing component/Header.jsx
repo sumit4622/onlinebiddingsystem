@@ -8,11 +8,12 @@ import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from "antd";
 import '../../App.css';
 
-export default function Header() {
+export default function Header({ onSearch }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
 
   const handleNavigate = () => navigate('/UserProfile');
@@ -23,6 +24,12 @@ export default function Header() {
     const token = localStorage.getItem(ACCESS_TOKEN);
     setIsLoggedIn(!!token);
   }, []);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchText(value);
+    if (onSearch) onSearch(value); 
+  };
 
   return (
     <>
@@ -39,7 +46,6 @@ export default function Header() {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-
 
           <ul className="navbar-nav mb-2 mb-lg-0">
             {isLoggedIn ? (
@@ -71,13 +77,21 @@ export default function Header() {
             )}
           </ul>
 
-
           <div className="ms-auto d-flex align-items-center gap-3">
 
             {isLoggedIn ? (
               <>
-                <input className="form-control" type="search" placeholder="Search" />
-                <button className="btn btn-outline-primary">Search</button>
+                <input
+                  className="form-control"
+                  type="search"
+                  placeholder="Search"
+                  value={searchText}
+                  onChange={handleSearchChange}
+                />
+
+                <button className="btn btn-outline-primary">
+                  Search
+                </button>
 
                 <button
                   className="btn btn-outline-danger"
@@ -109,12 +123,10 @@ export default function Header() {
                 </button>
               </>
             )}
-
           </div>
         </div>
       </nav>
 
-      {/* MODALS */}
       <LoginModal
         show={showLoginModal}
         handleClose={() => setShowLoginModal(false)}

@@ -232,12 +232,28 @@ def listUser(request):
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
-def delete_user(request, userId):  # function name in lowercase, for Django convention
+def delete_user(request, userId):  
     try:
         user = User.objects.get(id=userId)
         if user.is_superuser:
             return Response({"error": "Cannot delete admin user"}, status=status.HTTP_403_FORBIDDEN)
         user.delete()
+        try:
+            context = {
+                "user_name" : f'{user.first_name} {user.last_name}',
+            }
+
+            html_content = render_to_string("emails/UserDelete.html", context)
+            email = EmailMessage(
+                subject= "you have been deleted",
+                body=html_content,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
+            email.content_subtype = 'html'
+            email.send()
+        except Exception as e:
+            print("Error sending email", e)
         return Response({"message": "User deleted successfully"}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -251,14 +267,47 @@ def block_user(request, userId):
         if user.is_superuser:
             return Response({"error": "Cannot block admin user"}, status=status.HTTP_403_FORBIDDEN)
 
-        user.is_active = not user.is_active  # toggle block/unblock
+        # Detect status BEFORE change
+        was_active = user.is_active  
+
+        # Toggle active/inactive (block/unblock)
+        user.is_active = not user.is_active
         user.save()
+
+        # Choose email template based on status
+        template_name = "emails/Block.html" if not user.is_active else "emails/Unblock.html"
+
+        # Email subject based on action
+        subject = (
+            "Your account has been blocked" if not user.is_active 
+            else "Your account has been unblocked"
+        )
+
+        # Prepare context
+        context = {
+            "user_name": f"{user.first_name} {user.last_name}",
+        }
+
+        try:
+            html_content = render_to_string(template_name, context)
+            email = EmailMessage(
+                subject=subject,
+                body=html_content,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
+            email.content_subtype = 'html'
+            email.send()
+        except Exception as e:
+            print(f"Error sending email: {e}")
 
         return Response({
             "message": f"User {'blocked' if not user.is_active else 'unblocked'} successfully"
         }, status=status.HTTP_200_OK)
+
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
     
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
