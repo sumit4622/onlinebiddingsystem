@@ -45,7 +45,7 @@ export default function Dashboard() {
     setActiveBidIndex(null);
   };
 
-  
+
   const filteredBids = approvedBids.filter(item =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -72,7 +72,7 @@ export default function Dashboard() {
               <div className="card h-100">
                 <div className="card-body">
                   <img
-                    src={`http://localhost:8000${item.image}`}
+                    src={`http://20.40.56.69:8000${item.image}`}
                     alt="Auction Item"
                     style={{ width: '100%', height: '12rem' }}
                   />

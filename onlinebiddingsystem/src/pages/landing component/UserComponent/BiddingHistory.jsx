@@ -58,7 +58,7 @@ export default function BiddingHistoryPage() {
               <tr key={index}>
                 <td>
                   <div className="d-flex align-items-center gap-3">
-                    <img src={`http://localhost:8000${item.image}`} width="60" height="60" style={{ objectFit: 'cover' }} />
+                    <img src={`http://20.40.56.69:8000${item.image}`} width="60" height="60" style={{ objectFit: 'cover' }} />
                     <span>{item.itemName}</span>
                   </div>
                 </td>
@@ -81,7 +81,7 @@ export default function BiddingHistoryPage() {
               <tr key={index}>
                 <td>
                   <div className="d-flex align-items-center gap-3">
-                    <img src={`http://localhost:8000${item.image}`} width="60" height="60" style={{ objectFit: 'cover' }} />
+                    <img src={`http://20.40.56.69:8000${item.image}`} width="60" height="60" style={{ objectFit: 'cover' }} />
                     <span>{item.name}</span>
                   </div>
                 </td>
