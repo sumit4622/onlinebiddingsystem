@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ACCESS_TOKEN } from './adminConstants';
 
 const adminapi = axios.create({
-  baseURL:  "http://localhost:8000/api",
+  baseURL: "http://20.40.56.69:8000/api" || "http://localhost:8000/api",
 });
 
 adminapi.interceptors.request.use((config) => {

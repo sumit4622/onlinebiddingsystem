@@ -73,7 +73,7 @@ export default function Auction() {
               <div className="card h-100 mb-4 mt-4">
                 <div className="card-body">
                   <img
-                    src={`http://localhost:8000${item.image}`}
+                    src={`http://20.40.56.69:8000${item.image}`}
                     alt={item.title}
                     style={{ width: '100%', height: '12rem', objectFit: 'cover' }}
                   />

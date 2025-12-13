@@ -25,7 +25,7 @@ export const fetch_latestbid = async ({ itemId }) => {
 }
 
 export const connectAuctionSocket = (id) => {
-    return new WebSocket(`ws://localhost:8001/ws/auction/${id}/`);
+    return new WebSocket(`ws://20.40.56.69:8000/ws/auction/${id}/`);
 
 }
 
@@ -46,7 +46,7 @@ export const userUpdate = async (formData) => {
     return await api.post(`/api/userUpdate/`, formData)
 }
 
-export const BiddingHistory = async () =>{
+export const BiddingHistory = async () => {
     return await api.get(`/api/BiddingHistory/`)
 }
 
