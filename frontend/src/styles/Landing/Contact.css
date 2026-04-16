@@ -1,0 +1,27 @@
+.btn:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+  h2 {
+    color: var(--primary-color) ;
+    margin-bottom: 3rem !important;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: var(--accent-color);
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(159, 150, 131, 0.5);
+}
+

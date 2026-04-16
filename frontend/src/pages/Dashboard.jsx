@@ -1,0 +1,127 @@
+import { useState, useEffect } from 'react';
+import Header from './landing component/Header';
+import LogoutModal from "./login/LogoutModal";
+import SureModal from '../landingPage/Components/SureModal';
+import { useNavigate } from 'react-router-dom';
+import { fetchApprovedBid } from '../services/userServices';
+import TimeCompact from './Support/compactTime';
+
+export default function Dashboard() {
+  const [showAuctionModal, setShowAuctionModal] = useState(false);
+  const [activeBidIndex, setActiveBidIndex] = useState(null);
+  const [approvedBids, setApprovedBids] = useState([]);
+  const [retiredStates, setRetiredStates] = useState({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchApprovedBids();
+  }, []);
+
+  const fetchApprovedBids = async () => {
+    try {
+      const response = await fetchApprovedBid();
+      const approved = response.filter(item => item.is_approved);
+      setApprovedBids(approved);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleRetiredState = (id, retired) => {
+    setRetiredStates(prev => ({ ...prev, [id]: retired }));
+  };
+
+  const handleBidClick = (item) => {
+    setActiveBidIndex(item);
+  };
+
+  const handleCloseBidModal = () => {
+    setActiveBidIndex(null);
+  };
+
+  const handleContinueBid = () => {
+    navigate(`/auction/${activeBidIndex.id}`, { state: { item: activeBidIndex } });
+    setActiveBidIndex(null);
+  };
+
+
+  const filteredBids = approvedBids.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <>
+      <LogoutModal />
+      <Header onSearch={(value) => setSearchQuery(value)} />
+
+      <div className='py-5' style={{ backgroundColor: '#004663' }}>
+        <div className="container">
+          <h1 className="text-white fw-bold mb-0 m-3"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+            Auctions
+          </h1>
+        </div>
+      </div>
+
+      <div className='container'>
+        <div className="row">
+          {filteredBids.map((item) => (
+            <div key={item.id} className="col-sm-6 col-md-4 col-lg-4 gx-5 mb-4 mt-4">
+              <div className="card h-100">
+                <div className="card-body">
+                  <img
+                    src={`http://20.40.56.69:8000${item.image}`}
+                    alt="Auction Item"
+                    style={{ width: '100%', height: '12rem' }}
+                  />
+
+                  <h5 className="card-title">{item.title}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">{item.description}</h6>
+
+                  <hr />
+
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <p className='fw-bold mb-0'>Rs: {item.minimum_bid}</p>
+
+                    <TimeCompact
+                      end={item.end_date}
+                      onRetiredChange={(retired) => handleRetiredState(item.id, retired)}
+                    />
+                  </div>
+
+                  <hr />
+
+                  <button
+                    className='btn btn-dark'
+                    style={{ backgroundColor: '#3C3C43' }}
+                    onClick={() => handleBidClick(item)}
+                  >
+                    {retiredStates[item.id] ? "View Details" : "Start Bid"}
+                  </button>
+
+                  {activeBidIndex === item && (
+                    <SureModal onClose={handleCloseBidModal} onContinue={handleContinueBid} />
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button
+        className='btn btn-dark text-light rounded-pill position-fixed floating-button'
+        style={{ backgroundColor: '#3C3C43', width: '10rem', height: '3rem', bottom: '20px', right: '80px' }}
+        onClick={() => setShowAuctionModal(true)}
+      >
+        Create Auction
+      </button>
+
+      {showAuctionModal && (
+        <SureModal onClose={() => setShowAuctionModal(false)} onContinue={() => navigate('/UserProfile/upload')} />
+      )}
+    </>
+  );
+}
