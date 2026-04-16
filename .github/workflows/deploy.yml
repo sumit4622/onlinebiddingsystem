@@ -2,17 +2,10 @@ name: ci
 
 on:
   push:
-    branches:
-      - main
-      - dev
+    branches: ["main", "dev"]
   pull_request:
-    branches:
-      - main
-      - dev
-    types:
-      - opened
-      - reopened
-      - synchronize
+    branches: ["main", "dev"]
+    types: ["opened", "reopened", "synchronize"]
 
 jobs:
   build-and-deploy:
@@ -29,12 +22,12 @@ jobs:
         run: npm run build
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' 
+        if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
-          publish_dir: ./build 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
           user_name: "Your Name"
           user_email: "your-email@example.com"
-          allow_empty_commit: true 
-          force_orphan: true 
+          allow_empty_commit: true
+          force_orphan: true
