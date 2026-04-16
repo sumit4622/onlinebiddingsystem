@@ -31,7 +31,7 @@ export function useCountdown(end) {
 
     const timer = setInterval(() => {
       setTimeLeft(calculateTime());
-    }, 1000); // update every second
+    }, 1000);
 
     return () => clearInterval(timer);
   }, [end]);

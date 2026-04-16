@@ -13,11 +13,11 @@ export default function AccountSetting() {
     password: '',
   });
 
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getuserUpdate(); 
+        const response = await getuserUpdate();
         const data = response.data;
 
         setFormData({
@@ -37,7 +37,7 @@ export default function AccountSetting() {
     fetchData();
   }, []);
 
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -46,12 +46,12 @@ export default function AccountSetting() {
     }));
   };
 
-  
+
   const toggleEdit = async () => {
     if (isEditable) {
       // When saving
       try {
-        const updateResponse = await userUpdate(formData);
+        await userUpdate(formData);
         alert("Profile updated successfully!");
 
       } catch (error) {
