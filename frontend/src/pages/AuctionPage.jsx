@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import HigestBid from "./landing component/PagesComponents/HigestBid";
 import PopMessage from "../landingPage/Components/Popup";
 import TimeBoxes from "./Support/BoxTime";
-import { placeBid, fetch_latestbid, connectAuctionSocket, userCerndincial } from "../services/userServices";
+import { fetch_latestbid, connectAuctionSocket, userCerndincial } from "../services/userServices";
 import BidModel from "../landingPage/Components/BidModel";
 import Feedback from "../landingPage/Components/Feedback";
 
@@ -15,7 +15,6 @@ export default function AuctionPage() {
   const [showAuctionModal, setShowAuctionModal] = useState(false);
   const [socket, setSocket] = useState(null);
   const [auctionEnded, setAuctionEnded] = useState(false);
-  const [winner, setWinner] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
 
   const { id } = useParams();
@@ -107,16 +106,6 @@ export default function AuctionPage() {
         setAuctionEnded(true);
 
 
-        // fetch_latestbid({ itemId: id })
-        //   .then(data => {
-        //     if (data.latest_bid_amount > 0) {
-        //       console.log(data)
-        //       setWinner(data.winner.first_name);
-        //     } else {
-        //       setWinner("No one");
-        //     }
-        //   })
-        // .catch(err => console.error("Failed to fetch winner:", err));
       }
     };
 

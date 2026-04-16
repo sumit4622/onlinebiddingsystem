@@ -28,13 +28,13 @@ export default function Header({ onSearch }) {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchText(value);
-    if (onSearch) onSearch(value); 
+    if (onSearch) onSearch(value);
   };
 
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top px-3">
-        <a className="navbar-brand" style={{ cursor: "pointer" }}>Online Bidding</a>
+        <a className="navbar-brand" style={{ cursor: "pointer" }} href="/#">Online Bidding</a>
 
         <button
           className="navbar-toggler"
@@ -51,7 +51,7 @@ export default function Header({ onSearch }) {
             {isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <a className="nav-link" onClick={handleAuctionNavigate} style={{ cursor: "pointer" }}>
+                  <a className="nav-link" onClick={handleAuctionNavigate} style={{ cursor: "pointer" }} href="/#">
                     Auction
                   </a>
                 </li>
@@ -59,12 +59,12 @@ export default function Header({ onSearch }) {
             ) : (
               <>
                 <li className="nav-item">
-                  <a className="nav-link" onClick={handleHomeNavigate} style={{ cursor: "pointer" }}>
+                  <a className="nav-link" onClick={handleHomeNavigate} style={{ cursor: "pointer" }} href="/#">
                     Home
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" onClick={handleAuctionNavigate} style={{ cursor: "pointer" }}>
+                  <a className="nav-link" onClick={handleAuctionNavigate} style={{ cursor: "pointer" }} href="/#">
                     Auction
                   </a>
                 </li>
