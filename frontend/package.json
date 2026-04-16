@@ -2,7 +2,6 @@
     "name": "onlinebiddingsystem",
     "version": "0.1.0",
     "private": true,
-    "homepage": "https://sumit4622.github.io/onlinebiddingsystem",
     "dependencies": {
         "@mobiscroll/react": "npm:@mobiscroll/react-next-trial@^5.35.0",
         "@popperjs/core": "^2.11.8",
